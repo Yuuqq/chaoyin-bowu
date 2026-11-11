@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>潮音博物 · 异质知识图谱 v0.1 交互漫游台（108 节点 / 210 三元组）</title>
+  <style>
+    :root {
+      --bg-paper: #f6f4ef;
+      --card-bg: #ffffff;
+      --ink-primary: #1a252f;
+      --ink-secondary: #4a5968;
+      --teal-deep: #155e63;
+      --ochre-accent: #b86b23;
+      --crimson-warn: #a93226;
+      --border-soft: #dcd7cc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      background: var(--bg-paper);
+      color: var(--ink-primary);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    header {
+      background: linear-gradient(120deg, #0d2b36 0%, #155e63 60%, #1d4e56 100%);
+      color: #fff;
+      padding: 12px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #d4a359;
+      flex-shrink: 0;
+    }
+    .brand-left h1 { font-size: 19px; font-weight: 700; letter-spacing: 0.4px; }
+    .brand-left p { font-size: 11.5px; color: #d6e8ea; margin-top: 2px; }
+    .nav-strip { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .nav-pill {
+      text-decoration: none;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #f0f7f8;
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.18s;
+    }
+    .nav-pill:hover { background: rgba(212,163,89,0.34); border-color: #ffd98e; }
+    .nav-pill.active { background: rgba(212,163,89,0.38); border-color: #ffd98e; color: #fff6df; }
+    main {
+      display: grid;
+      grid-template-columns: 290px 1fr 350px;
+      gap: 12px;
+      padding: 12px 16px;
+      flex: 1;
+      min-height: 0;
+    }
+    .panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      box-shadow: 0 2px 6px rgba(26,37,47,0.04);
+    }
+    .panel-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--teal-deep);
+      border-left: 4px solid var(--ochre-accent);
+      padding-left: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .search-input {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12.5px;
+      margin-bottom: 8px;
+    }
+    .bridge-toggle {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 7px 9px;
+      background: #fdf2f0;
+      border: 1px solid #ebcdc8;
+      border-radius: 6px;
+      color: #922b21;
+      font-weight: 600;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .type-list {
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      padding-right: 2px;
+    }
+    .type-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 8px;
+      border-radius: 5px;
+      border: 1px solid #eef2f5;
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .type-item:hover { background: #f8fafc; }
+    .type-item.muted { opacity: 0.4; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 7px; }
+    .hub-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #dcd7cc;
+    }
+    .hub-chip {
+      font-size: 11px;
+      padding: 3px 7px;
+      background: #eef6f7;
+      border: 1px solid #bcd6da;
+      color: #135d66;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .hub-chip:hover { background: #155e63; color: #fff; }
+    .canvas-wrap {
+      position: relative;
+      flex: 1;
+      background: radial-gradient(circle at center, #ffffff 0%, #f3f6f8 100%);
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+    canvas:active { cursor: grabbing; }
+    .canvas-hud {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    .hud-btn {
+      padding: 5px 9px;
+      font-size: 11.5px;
+      border: 1px solid #cbd5e1;
+      background: rgba(255,255,255,0.92);
+      border-radius: 5px;
+      cursor: pointer;
+      color: #1e293b;
+      font-weight: 600;
+    }
+    .hud-btn:hover { background: #155e63; color: #fff; }
+    .canvas-tip {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+      font-size: 11px;
+      color: #64748b;
+      background: rgba(255,255,255,0.86);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .entity-card {
+      background: #f8fbfb;
+      border: 1px solid #d4e4e6;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .entity-badge {
+      display: inline-block;
+      font-size: 11px;
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .entity-name { font-size: 16px; font-weight: 700; color: #0f293a; }
+    .entity-meta { font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.5; }
+    .triple-scroll {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .triple-row {
+      font-size: 11.8px;
+      padding: 6px 8px;
+      background: #fcfcfb;
+      border: 1px solid #e6e2d8;
+      border-radius: 5px;
+      cursor: pointer;
+      line-height: 1.45;
+    }
+    .triple-row:hover { border-color: #155e63; background: #f2f9f9; }
+    .triple-row.bridge { background: #fff5f4; border-color: #e6b0aa; }
+    .rel-tag {
+      font-family: "Consolas", monospace;
+      font-size: 10.5px;
+      background: #e8eef1;
+      color: #154360;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+    .cypher-box {
+      background: #16242c;
+      color: #d8f3dc;
+      font-family: "Consolas", monospace;
+      font-size: 10.8px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      line-height: 1.45;
+      max-height: 115px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-left">
+      <h1>潮音博物 · “音—物—地—艺”异质知识图谱 v0.1 漫游台</h1>
+      <p id="kg-subtitle">汕头市濠江区先导库 ｜ 正在加载图谱拓扑指标...</p>
+    </div>
+    <nav class="nav-strip">
+      <a class="nav-pill" href="index.html">🖥 主控导览台</a>
+      <a class="nav-pill active" href="graph.html">🕸 异质知识图谱</a>
+      <a class="nav-pill" href="experiment.html">🧪 三臂实验终端</a>
+      <a class="nav-pill" href="mobile.html?id=CY-AF-001">📱 手机扫码 H5</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Left Filter Panel -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>实体层与跨门类桥接筛选</span>
+        <span id="visible-count" style="font-size:11px;color:#64748b;"></span>
+      </div>
+      <input id="search-box" class="search-input" type="text" placeholder="检索词条、本字(拍/粿/鱼)、村落或工艺..." />
+      <label class="bridge-toggle">
+        <input type="checkbox" id="only-bridges" />
+        <span>仅高亮 10 条跨门类语义桥接子图</span>
+      </label>
+      <div class="type-list" id="type-list"></div>
+      <div class="hub-chips">
+        <span style="width:100%;font-size:11px;color:#64748b;">高频枢纽节点直达：</span>
+        <button class="hub-chip" data-id="CY-AF-001">达濠鱼丸</button>
+        <button class="hub-chip" data-id="CY-AF-002">鱼饭</button>
+        <button class="hub-chip" data-id="CY-CR-006">杉木桶与铁匙</button>
+        <button class="hub-chip" data-id="CY-PR-001">侨批(番批)</button>
+        <button class="hub-chip" data-id="MOR-HI">本字:鱼 hî⁵</button>
+        <button class="hub-chip" data-id="MOR-GUE">本字:粿 guê²</button>
+        <button class="hub-chip" data-id="MOR-PHAH">本字:拍 phah⁴</button>
+      </div>
+    </section>
+
+    <!-- Center Force/Shell Graph Canvas -->
+    <section class="panel" style="padding:10px;">
+      <div class="canvas-wrap" id="canvas-wrap">
+        <canvas id="kg-canvas"></canvas>
+        <div class="canvas-hud">
+          <button class="hud-btn" id="btn-reset">重置全局视图</button>
+          <button class="hud-btn" id="btn-layout">切换 力导向 / 同心环 布局</button>
+        </div>
+        <div class="canvas-tip">滚轮缩放 · 拖拽画布或节点 · 点击任意节点检视一跳语义三元组与 Neo4j Cypher</div>
+      </div>
+    </section>
+
+    <!-- Right Inspector Panel -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>实体属性与一跳三元组检视器</span>
+      </div>
+      <div class="entity-card" id="entity-card"></div>
+      <div style="font-size:12px;font-weight:700;color:#155e63;margin-bottom:6px;" id="triple-header">关联语义三元组</div>
+      <div class="triple-scroll" id="triple-list"></div>
+      <div style="font-size:11.5px;font-weight:700;color:#475569;margin-bottom:4px;">Neo4j Cypher 子图查询脚本</div>
+      <div class="cypher-box" id="cypher-box"></div>
+    </section>
+  </main>
+
+  <script src="seed_data.js"></script>
+  <script src="kg_data.js"></script>
+  <script>
+    (function () {
+      const KG = window.CHAOYIN_KG_DATA;
+      const m = KG.metrics;
+      document.getElementById("kg-subtitle").textContent =
+        `汕头市濠江区先导库 ｜ ${m.total_nodes} 个异质节点 · ${m.total_edges_triples} 条有向三元组 · ${m.node_types_count} 类实体 · ${m.relation_types_count} 类语义关系 · ${m.cross_category_bridges_count} 条跨门类桥接`;
+
+      const hiddenTypes = new Set();
+      let onlyBridges = false;
+      let searchTerm = "";
+      let selectedId = "CY-AF-001";
+      let layoutMode = "shell"; // 'shell' or 'force'
+
+      const nodeMap = new Map();
+      const ringMap = {
+        CountyUnit: 0, Category: 1, Street: 1, AccentPoint: 1,
+        NominalItem: 2, KeyMorpheme: 3, SpatialSite: 3, PhoneticFeature: 3, HeritageLevel: 3,
+        CraftAndMaterial: 4, FolkAliasOrTrap: 4
+      };
+
+      // Initialize positions
+      const groupedByRing = { 0: [], 1: [], 2: [], 3: [], 4: [] };
+      KG.nodes.forEach(n => {
+        const r = ringMap[n.node_type] ?? 3;
+        groupedByRing[r].push(n);
+      });
+      const ringRadii = { 0: 0, 1: 105, 2: 205, 3: 295, 4: 375 };
+      Object.entries(groupedByRing).forEach(([r, arr]) => {
+        arr.sort((a, b) => a.id.localeCompare(b.id));
+        const rad = ringRadii[r];
+        arr.forEach((n, idx) => {
+          const theta = (2 * Math.PI * idx) / Math.max(1, arr.length) + Number(r) * 0.17;
+          n.sx = rad * Math.cos(theta);
+          n.sy = rad * Math.sin(theta);
+          n.x = n.sx;
+          n.y = n.sy;
+          n.vx = 0;
+          n.vy = 0;
+          nodeMap.set(n.id, n);
+        });
+      });
+
+      // Render left type filter list
+      const typeListEl = document.getElementById("type-list");
+      Object.entries(KG.node_type_catalog).forEach(([ntype, info]) => {
+        const cnt = m.node_type_breakdown[ntype] || 0;
+        const div = document.createElement("div");
+        div.className = "type-item";
+        div.innerHTML = `<span><span class="dot" style="background:${info.color}"></span>${info.zh}</span><strong>${cnt}</strong>`;
+        div.addEventListener("click", () => {
+          if (hiddenTypes.has(ntype)) {
+            hiddenTypes.delete(ntype);
+            div.classList.remove("muted");
+          } else {
+            hiddenTypes.add(ntype);
+            div.classList.add("muted");
+          }
+          draw();
+        });
+        typeListEl.appendChild(div);
+      });
+
+      document.getElementById("only-bridges").addEventListener("change", (e) => {
+        onlyBridges = e.target.checked;
+        draw();
+      });
+      document.getElementById("search-box").addEventListener("input", (e) => {
+        searchTerm = e.target.value.trim().toLowerCase();
+        if (searchTerm) {
+          const hit = KG.nodes.find(n =>
+            n.label.toLowerCase().includes(searchTerm) ||
+            n.id.toLowerCase().includes(searchTerm) ||
+            (n.pengim && n.pengim.toLowerCase().includes(searchTerm))
+          );
+          if (hit) selectNode(hit.id, false);
+        }
+        draw();
+      });
+      document.querySelectorAll(".hub-chip").forEach(btn => {
+        btn.addEventListener("click", () => selectNode(btn.dataset.id, true));
+      });
+
+      // Canvas & Camera
+      const wrap = document.getElementById("canvas-wrap");
+      const canvas = document.getElementById("kg-canvas");
+      const ctx = canvas.getContext("2d");
+      let camX = 0, camY = 0, camScale = 0.85;
+      let draggingNode = null, panning = false, lastMX = 0, lastMY = 0;
+
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = wrap.clientWidth * dpr;
+        canvas.height = wrap.clientHeight * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        draw();
+      }
+      window.addEventListener("resize", resize);
+
+      function screenToWorld(sx, sy) {
+        const cx = wrap.clientWidth / 2 + camX;
+        const cy = wrap.clientHeight / 2 + camY;
+        return { x: (sx - cx) / camScale, y: (sy - cy) / camScale };
+      }
+
+      function isNodeVisible(n) {
+        if (hiddenTypes.has(n.node_type)) return false;
+        if (onlyBridges) {
+          return KG.edges.some(e => e.is_cross_bridge && (e.source === n.id || e.target === n.id));
+        }
+        return true;
+      }
+
+      function nodeRadius(n) {
+        if (n.node_type === "CountyUnit") return 14;
+        if (n.node_type === "NominalItem") return 9.5;
+        if (n.node_type === "Category" || n.node_type === "Street") return 8.5;
+        return 6.2;
+      }
+
+      function runForceRelaxation(steps) {
+        const nodes = KG.nodes;
+        for (let s = 0; s < steps; s++) {
+          for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+              const a = nodes[i], b = nodes[j];
+              let dx = b.x - a.x, dy = b.y - a.y;
+              let d2 = dx * dx + dy * dy + 40;
+              let f = 2600 / d2;
+              let d = Math.sqrt(d2);
+              a.vx -= (dx / d) * f;
+              a.vy -= (dy / d) * f;
+              b.vx += (dx / d) * f;
+              b.vy += (dy / d) * f;
+            }
+          }
+          KG.edges.forEach(e => {
+            const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
+            if (!a || !b) return;
+            let dx = b.x - a.x, dy = b.y - a.y;
+            let d = Math.hypot(dx, dy) || 1;
+            let target = e.is_cross_bridge ? 130 : 95;
+            let f = (d - target) * 0.025;
+            a.vx += (dx / d) * f;
+            a.vy += (dy / d) * f;
+            b.vx -= (dx / d) * f;
+            b.vy -= (dy / d) * f;
+          });
+          nodes.forEach(n => {
+            if (n.id === "COUNTY-HAOJIANG") { n.x = 0; n.y = 0; return; }
+            n.vx -= n.x * 0.008;
+            n.vy -= n.y * 0.008;
+            n.x += n.vx * 0.35;
+            n.y += n.vy * 0.35;
+            n.vx *= 0.65;
+            n.vy *= 0.65;
+          });
+        }
+      }
+
+      document.getElementById("btn-layout").addEventListener("click", () => {
+        if (layoutMode === "shell") {
+          layoutMode = "force";
+          runForceRelaxation(90);
+        } else {
+          layoutMode = "shell";
+          KG.nodes.forEach(n => { n.x = n.sx; n.y = n.sy; });
+        }
+        draw();
+      });
+
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        camX = 0; camY = 0; camScale = 0.85;
+        onlyBridges = false;
+        document.getElementById("only-bridges").checked = false;
+        hiddenTypes.clear();
+        document.querySelectorAll(".type-item").forEach(el => el.classList.remove("muted"));
+        draw();
+      });
+
+      canvas.addEventListener("mousedown", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        lastMX = mx; lastMY = my;
+        const w = screenToWorld(mx, my);
+        let hit = null;
+        for (let i = KG.nodes.length - 1; i >= 0; i--) {
+          const n = KG.nodes[i];
+          if (!isNodeVisible(n)) continue;
+          if (Math.hypot(n.x - w.x, n.y - w.y) <= nodeRadius(n) + 4) {
+            hit = n; break;
+          }
+        }
+        if (hit) {
+          draggingNode = hit;
+          selectNode(hit.id, false);
+        } else {
+          panning = true;
+        }
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!draggingNode && !panning) return;
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+        if (draggingNode) {
+          const w = screenToWorld(mx, my);
+          draggingNode.x = w.x;
+          draggingNode.y = w.y;
+          draw();
+        } else if (panning) {
+          camX += mx - lastMX;
+          camY += my - lastMY;
+          lastMX = mx; lastMY = my;
+          draw();
+        }
+      });
+      window.addEventListener("mouseup", () => { draggingNode = null; panning = false; });
+
+      canvas.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.12 : 0.89;
+        camScale = Math.max(0.35, Math.min(2.6, camScale * factor));
+        draw();
+      }, { passive: false });
+
+      function selectNode(nid, recenter) {
+        selectedId = nid;
+        const n = nodeMap.get(nid);
+        if (!n) return;
+        if (recenter) {
+          camX = -n.x * camScale * 0.35;
+          camY = -n.y * camScale * 0.35;
+        }
+        renderInspector(n);
+        draw();
+      }
+
+      function renderInspector(n) {
+        const card = document.getElementById("entity-card");
+        const isNominal = n.node_type === "NominalItem";
+        let extraHtml = "";
+        if (n.pengim) {
+          extraHtml += `<div class="entity-meta"><strong>1960 潮拼：</strong>${n.pengim}<br/><strong>国际音标：</strong>${n.ipa || ""}</div>`;
+        }
+        if (isNominal) {
+          extraHtml += `<div style="margin-top:8px;display:flex;gap:6px;">
+            <a href="mobile.html?id=${n.id}" style="font-size:11.5px;padding:4px 8px;background:#155e63;color:#fff;border-radius:4px;text-decoration:none;">📱 打开扫码导览卡</a>
+            <a href="index.html" style="font-size:11.5px;padding:4px 8px;background:#eef5f6;color:#155e63;border:1px solid #b5cfd3;border-radius:4px;text-decoration:none;">🖥 主控台检视</a>
+          </div>`;
+        }
+        card.innerHTML = `
+          <span class="entity-badge" style="background:${n.color}">${n.node_type_zh} · ${n.id}</span>
+          <div class="entity-name">${n.full_orthography || n.label}</div>
+          <div class="entity-meta">图谱连接度（Degree）：<strong>${n.degree}</strong></div>
+          ${extraHtml}
+        `;
+
+        const related = KG.edges.filter(e => e.source === n.id || e.target === n.id);
+        document.getElementById("triple-header").textContent = `一跳关联语义三元组（共 ${related.length} 条）`;
+        const tList = document.getElementById("triple-list");
+        tList.innerHTML = "";
+        related.forEach(e => {
+          const sNode = nodeMap.get(e.source), tNode = nodeMap.get(e.target);
+          const otherId = e.source === n.id ? e.target : e.source;
+          const row = document.createElement("div");
+          row.className = "triple-row" + (e.is_cross_bridge ? " bridge" : "");
+          row.innerHTML = `<strong>${sNode ? sNode.label : e.source}</strong> <span class="rel-tag">${e.relation}</span> <strong>${tNode ? tNode.label : e.target}</strong><div style="color:#64748b;font-size:11px;margin-top:2px;">↳ ${e.label}</div>`;
+          row.addEventListener("click", () => selectNode(otherId, false));
+          tList.appendChild(row);
+        });
+
+        const cypher = `// 查询节点 ${n.id} (${n.label}) 的一跳多模态子图\nMATCH (center {id: '${n.id}'})-[r]-(neighbor)\nRETURN center, type(r) AS relation, r.note AS note, neighbor;`;
+        document.getElementById("cypher-box").textContent = cypher;
+      }
+
+      function draw() {
+        const w = wrap.clientWidth, h = wrap.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+        ctx.save();
+        ctx.translate(w / 2 + camX, h / 2 + camY);
+        ctx.scale(camScale, camScale);
+
+        if (layoutMode === "shell") {
+          [105, 205, 295, 375].forEach(rad => {
+            ctx.beginPath();
+            ctx.arc(0, 0, rad, 0, Math.PI * 2);
+            ctx.strokeStyle = "#e2e8f0";
+            ctx.setLineDash([4, 4]);
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          });
+          ctx.setLineDash([]);
+        }
+
+        const neighborSet = new Set([selectedId]);
+        KG.edges.forEach(e => {
+          if (e.source === selectedId) neighborSet.add(e.target);
+          if (e.target === selectedId) neighborSet.add(e.source);
+        });
+
+        let visNodes = 0;
+        KG.edges.forEach(e => {
+          const a = nodeMap.get(e.source), b = nodeMap.get(e.target);
+          if (!a || !b || !isNodeVisible(a) || !isNodeVisible(b)) return;
+          if (onlyBridges && !e.is_cross_bridge) return;
+          const active = e.source === selectedId || e.target === selectedId;
+          ctx.beginPath();
+          if (e.is_cross_bridge) {
+            const mx = (a.x + b.x) / 2 - (b.y - a.y) * 0.18;
+            const my = (a.y + b.y) / 2 + (b.x - a.x) * 0.18;
+            ctx.moveTo(a.x, a.y);
+            ctx.quadraticCurveTo(mx, my, b.x, b.y);
+            ctx.strokeStyle = "#c0392b";
+            ctx.lineWidth = active ? 2.4 : 1.5;
+          } else {
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.strokeStyle = active ? "#155e63" : "rgba(148, 163, 184, 0.28)";
+            ctx.lineWidth = active ? 1.8 : 0.8;
+          }
+          ctx.stroke();
+        });
+
+        KG.nodes.forEach(n => {
+          if (!isNodeVisible(n)) return;
+          visNodes++;
+          const rad = nodeRadius(n);
+          const isSel = n.id === selectedId;
+          const isNbr = neighborSet.has(n.id);
+          const matchSearch = searchTerm && (n.label.toLowerCase().includes(searchTerm) || n.id.toLowerCase().includes(searchTerm));
+
+          ctx.globalAlpha = (!selectedId || isNbr || onlyBridges || matchSearch) ? 1.0 : 0.32;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, rad, 0, Math.PI * 2);
+          ctx.fillStyle = n.color;
+          ctx.fill();
+          ctx.lineWidth = isSel || matchSearch ? 3 : 1.2;
+          ctx.strokeStyle = isSel || matchSearch ? "#f39c12" : "#ffffff";
+          ctx.stroke();
+
+          if (isSel || isNbr || n.node_type === "NominalItem" || n.node_type === "CountyUnit" || camScale > 1.25) {
+            ctx.font = (isSel || n.node_type === "NominalItem") ? "bold 11px 'Microsoft YaHei'" : "10px 'Microsoft YaHei'";
+            ctx.fillStyle = "#0f172a";
+            ctx.textAlign = "center";
+            ctx.fillText(n.label, n.x, n.y + rad + 12);
+          }
+        });
+        ctx.globalAlpha = 1.0;
+        ctx.restore();
+        document.getElementById("visible-count").textContent = `当前可见 ${visNodes}/${m.total_nodes}`;
+      }
+
+      resize();
+      selectNode("CY-AF-001", false);
+    })();
+  </script>
+</body>
+</html>

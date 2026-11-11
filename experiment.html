@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>潮音博物 · 濠江青少年三臂随机对照现场实验（3-Arm Field RCT）施测终端</title>
+  <style>
+    :root {
+      --bg-paper: #f6f4ef;
+      --card: #ffffff;
+      --ink: #1a252f;
+      --muted: #516170;
+      --teal: #155e63;
+      --ochre: #b86b23;
+      --jade: #196f3d;
+      --crimson: #a93226;
+      --border: #dcd7cc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      background: var(--bg-paper);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background: linear-gradient(120deg, #103742 0%, #155e63 60%, #1d4e56 100%);
+      color: #fff;
+      padding: 12px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #d4a359;
+    }
+    .brand-left h1 { font-size: 19px; font-weight: 700; }
+    .brand-left p { font-size: 11.5px; color: #d6e8ea; margin-top: 2px; }
+    .nav-strip { display: flex; gap: 8px; flex-wrap: wrap; }
+    .nav-pill {
+      text-decoration: none;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #f0f7f8;
+      padding: 6px 11px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .nav-pill.active { background: rgba(212,163,89,0.38); border-color: #ffd98e; color: #fff6df; }
+    .container {
+      max-width: 1160px;
+      width: 100%;
+      margin: 16px auto;
+      padding: 0 16px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 6px rgba(26,37,47,0.04);
+    }
+    .sec-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--teal);
+      border-left: 4px solid var(--ochre);
+      padding-left: 9px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .enroll-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      align-items: end;
+    }
+    label.fld { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+    input, select {
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--ink);
+      background: #fff;
+    }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary:hover { background: #0e464a; }
+    .arm-banner {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: #eef7f7;
+      border: 1px solid #b8d8da;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12.8px;
+    }
+    .arm-switch { display: flex; gap: 6px; align-items: center; }
+    .arm-btn {
+      font-size: 11.5px;
+      padding: 4px 9px;
+      border-radius: 4px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      cursor: pointer;
+    }
+    .arm-btn.active { background: var(--ochre); color: #fff; border-color: var(--ochre); font-weight: 700; }
+    .stim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .stim-card {
+      border: 1px solid #dfe5e8;
+      border-radius: 7px;
+      padding: 12px;
+      background: #fcfdfd;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .stim-head { display: flex; justify-content: space-between; align-items: center; }
+    .stim-title { font-size: 15px; font-weight: 700; color: #103742; }
+    .stim-cat { font-size: 11px; padding: 2px 6px; border-radius: 4px; background: #f2ece1; color: #8c5218; }
+    .phon-strip {
+      background: #f1f7f9;
+      border: 1px solid #d3e4ea;
+      border-radius: 5px;
+      padding: 6px 8px;
+      font-family: "Segoe UI", "Arial", sans-serif;
+      font-size: 12.5px;
+      color: #154360;
+    }
+    .synth-btn {
+      padding: 5px 9px;
+      font-size: 11.5px;
+      background: #155e63;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+    .quiz-list { display: flex; flex-direction: column; gap: 12px; }
+    .quiz-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 7px;
+      padding: 11px 13px;
+      background: #fafbfc;
+    }
+    .quiz-q { font-size: 13.5px; font-weight: 700; margin-bottom: 8px; color: #1e293b; }
+    .quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .opt-lbl {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12.5px;
+      padding: 6px 9px;
+      border: 1px solid #dbe2e8;
+      border-radius: 5px;
+      background: #fff;
+      cursor: pointer;
+    }
+    .opt-lbl:hover { border-color: var(--teal); }
+    .result-box {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 7px;
+      background: #eef8f3;
+      border: 1px solid #a9dfbf;
+      display: none;
+    }
+    @media (max-width: 860px) {
+      .enroll-grid, .stim-grid, .quiz-opts { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand-left">
+      <h1>潮音博物 · 濠江青少年三臂随机对照实验（H3 Field RCT）施测终端</h1>
+      <p>分层区组 1:1:1 随机分流 ｜ 控制家庭日常潮语暴露度协变量（ANCOVA）｜ 支持匿名 CSV 实验日志一键导出</p>
+    </div>
+    <nav class="nav-strip">
+      <a class="nav-pill" href="index.html">🖥 主控导览台</a>
+      <a class="nav-pill" href="graph.html">🕸 异质知识图谱</a>
+      <a class="nav-pill active" href="experiment.html">🧪 三臂实验终端</a>
+      <a class="nav-pill" href="mobile.html?id=CY-AF-001">📱 手机扫码 H5</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- Step 1: Stratified Block Randomization -->
+    <section class="card">
+      <div class="sec-title">
+        <span>第一步：匿名受试者基线登记与分层区组随机分流（Stratified Block Randomization）</span>
+        <span style="font-size:12px;color:#64748b;">目标样本 N = 160–240 ｜ 基准 N = 180（H3b 检验力 97.0%）</span>
+      </div>
+      <div class="enroll-grid">
+        <label class="fld">
+          匿名受试编号（不含姓名学号）
+          <input type="text" id="subj-id" value="HJ-RCT-018" />
+        </label>
+        <label class="fld">
+          学段分层（Grade Stratum）
+          <select id="grade-band">
+            <option value="G5_6">小学高年级（5–6 年级）</option>
+            <option value="G7_9" selected>初中阶段（7–9 年级）</option>
+          </select>
+        </label>
+        <label class="fld">
+          家庭日常潮语暴露度协变量（Z_exposure）
+          <select id="home-exp">
+            <option value="LOW">低度暴露（日常全说普通话，仅听懂零星潮语）</option>
+            <option value="MID" selected>中度暴露（长辈说潮语能听懂，较少主动开口）</option>
+            <option value="HIGH">高度暴露（家庭日常以潮汕话双向交流为主）</option>
+          </select>
+        </label>
+        <button class="btn-primary" id="btn-assign">执行分层区组随机分配</button>
+      </div>
+
+      <div class="arm-banner" id="arm-banner">
+        <div>
+          当前分配实验臂：<strong id="arm-name" style="color:#155e63;">Arm 3 · “潮音博物”多模态交互组</strong>
+          <span id="arm-desc" style="color:#475569;margin-left:8px;">（同步呈现正字溯源 + 1960潮拼/IPA + 双腔五度值基频轨迹 + F₀声调包络合成试听 + 濠江古村空间坐标）</span>
+        </div>
+        <div class="arm-switch">
+          <span style="font-size:11.5px;color:#64748b;">评审专家预览切换：</span>
+          <button class="arm-btn" data-arm="Arm1">Arm 1 普通话图文</button>
+          <button class="arm-btn" data-arm="Arm2">Arm 2 纯音频词表</button>
+          <button class="arm-btn active" data-arm="Arm3">Arm 3 潮音多模态</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 2: Controlled Stimulus Cards -->
+    <section class="card">
+      <div class="sec-title">
+        <span>第二步：受控刺激材料学习舱（6 项濠江跨门类核心名物）</span>
+        <span id="telemetry-lbl" style="font-size:12px;color:#155e63;">已记录试听交互：0 次 ｜ 学习驻留：0 秒</span>
+      </div>
+      <div class="stim-grid" id="stim-grid"></div>
+    </section>
+
+    <!-- Step 3: Standardized 8-Item Post-Test & CSV Logger -->
+    <section class="card">
+      <div class="sec-title">
+        <span>第三步：标准化客观后测卷（即时测验 / 7 日延迟保持测验同构题库，共 8 题）</span>
+        <span style="font-size:12px;color:#64748b;">涵盖：正字辨误 · 声调入声辨识 · 器物生计配对 · 未收录词防误信检验</span>
+      </div>
+      <div class="quiz-list" id="quiz-list"></div>
+      <div style="margin-top:14px;display:flex;gap:10px;align-items:center;">
+        <button class="btn-primary" id="btn-submit">提交后测卷并生成匿名实验记录</button>
+        <button class="btn-primary" id="btn-csv" style="background:#b86b23;display:none;">⬇ 导出匿名 CSV 实验数据行（供 ANCOVA 脚本读取）</button>
+      </div>
+      <div class="result-box" id="result-box"></div>
+    </section>
+  </div>
+
+  <script src="seed_data.js"></script>
+  <script>
+    (function () {
+      const seeds = window.CHAOYIN_DATA.seedItems;
+      const targetIds = ["CY-AF-001", "CY-AF-002", "CY-CR-001", "CY-CR-005", "CY-PR-002", "CY-PR-006"];
+      const stimItems = targetIds.map(id => seeds.find(s => s.id === id)).filter(Boolean);
+
+      const ARM_META = {
+        Arm1: {
+          title: "Arm 1 · 普通话标准图文展板组（对照组）",
+          desc: "（仅呈现普通话释义与器物简介，屏蔽 1960 潮拼、基频轨迹、合成试听及村落空间坐标）"
+        },
+        Arm2: {
+          title: "Arm 2 · 纯方言音频词表组（单模态组）",
+          desc: "（呈现词头 + 1960 潮拼/IPA + F₀ 声调包络合成试听，屏蔽器物生计解释、正字纠偏与古村空间坐标）"
+        },
+        Arm3: {
+          title: "Arm 3 · “潮音博物”多模态交互组（核心实验组）",
+          desc: "（全量呈现正字溯源 + 1960 潮拼/IPA + 濠江/汕头双腔基频曲线 + F₀ 声调包络合成试听 + 古村空间锚点）"
+        }
+      };
+
+      const QUIZ = [
+        {
+          id: "Q1",
+          q: "1. 【正字溯源】海内外潮人社群高频自称熟语（读音 ga¹-gī⁷-nâng⁵），符合历史文字理据的规范正字写法是？",
+          opts: ["A. 胶己人", "B. 家己人", "C. 佳纪人", "D. 交己人"],
+          ans: 1
+        },
+        {
+          id: "Q2",
+          q: "2. 【名物本义】达濠渔港传统名物“鱼饭”（hî⁵-bng¹）在潮汕海洋渔业生计史中的真实做法与含义是？",
+          opts: ["A. 海鱼肉切丁盖浇在白米饭上", "B. 鱼浆混入糯米粉蒸制成的糕饼", "C. 竹篾小篓盛本港海鱼以粗盐猛火煮熟摊凉当主食", "D. 生鱼片佐白粥食用"],
+          ans: 2
+        },
+        {
+          id: "Q3",
+          q: "3. 【动作语素】省级非遗达濠鱼丸技艺中，“拍鱼丸”（phah⁴ hî⁵-uân⁵）的“拍”字准确对应哪一核心工序？",
+          opts: ["A. 置于杉木桶内靠手掌反复摔打鱼浆上千次起胶", "B. 用木槌将鱼肉敲成薄纸状", "C. 为成品鱼丸拍摄记录", "D. 用机器高速旋转切割草鱼肉"],
+          ans: 0
+        },
+        {
+          id: "Q4",
+          q: "4. 【古雅器物专名】在人类非遗潮州工夫茶艺中，地道潮汕方言通常将冲茶小壶称作什么？",
+          opts: ["A. 茶盅（dê⁵-zong¹）", "B. 茶瓶 / 冲罐（dê⁵-pâng⁵ / chong¹-guang³）", "C. 水鼎（zui²-diang²）", "D. 茶瓯（dê⁵-au¹）"],
+          ans: 1
+        },
+        {
+          id: "Q5",
+          q: "5. 【声韵特征】蜈田村传统“木粿印”（bhêk⁸-guê²-ing³）首字声母 bh- [b] 属于潮汕话保留的哪类音韵特征？",
+          opts: ["A. 卷舌擦音声母", "B. 唇齿清擦音声母", "C. 古浊双唇塞音声母", "D. 舌尖边音声母"],
+          ans: 2
+        },
+        {
+          id: "Q6",
+          q: "6. 【生态俗谚】濠江渔谚“讨海人睇流水”（tô²-hai²-nâng⁵ toi³ lâu⁵-zui²）中，“睇”与“流水”分别指什么？",
+          opts: ["A. 观察；海洋潮汐涨落规律", "B. 记录；渔船账目收支流水", "C. 聆听；山涧溪流声音", "D. 等待；淡水补给"],
+          ans: 0
+        },
+        {
+          id: "Q7",
+          q: "7. 【田野空间锚定】侨批档案与工夫茶器物样本在汕头市濠江区的核心侨乡采集点位于哪一社区？",
+          opts: ["A. 礐石街道红光村", "B. 广澳街道东湖社区（东湖侨村）", "C. 达濠街道青篮街", "D. 马滘街道凤岗古村"],
+          ans: 1
+        },
+        {
+          id: "Q8",
+          q: "8. 【防幻觉辨识】当遇到知识库尚未田野采录核验的陌生器物词（如虚构词“青石双耳滤卤漏斗”）时，严谨的方言治学态度应当是？",
+          opts: ["A. 按普通话读音直接猜测潮州话拼音", "B. 找一个字形相近的成语替代解释", "C. 明确标识“暂未收录实证记录”，绝不凭空捏造拼音与工序", "D. 用谐音字随意编造民间传说"],
+          ans: 2
+        }
+      ];
+
+      let currentArm = "Arm3";
+      let audioClicks = 0;
+      let startTs = Date.now();
+      let lastRecordCsv = "";
+
+      setInterval(() => {
+        const sec = Math.floor((Date.now() - startTs) / 1000);
+        document.getElementById("telemetry-lbl").textContent =
+          `已记录 F₀ 合成试听交互：${audioClicks} 次 ｜ 学习驻留：${sec} 秒`;
+      }, 1000);
+
+      function hashCode(str) {
+        let h = 2166136261;
+        for (let i = 0; i < str.length; i++) {
+          h ^= str.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return Math.abs(h);
+      }
+
+      function playF0Contour(contour) {
+        audioClicks++;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        const now = ctx.currentTime;
+        const dur = 0.85;
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(0.18, now + 0.06);
+        contour.forEach((val, idx) => {
+          const t = now + (idx / Math.max(1, contour.length - 1)) * dur;
+          const hz = 165 * Math.pow(2, ((val - 30) / 25) * (7 / 12));
+          osc.frequency.linearRampToValueAtTime(hz, t);
+        });
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.05);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + dur + 0.07);
+      }
+
+      function setArm(armKey) {
+        currentArm = armKey;
+        document.getElementById("arm-name").textContent = ARM_META[armKey].title;
+        document.getElementById("arm-desc").textContent = ARM_META[armKey].desc;
+        document.querySelectorAll(".arm-btn").forEach(b => {
+          b.classList.toggle("active", b.dataset.arm === armKey);
+        });
+        renderStimuli();
+      }
+
+      document.getElementById("btn-assign").addEventListener("click", () => {
+        const sid = document.getElementById("subj-id").value.trim() || "ANON";
+        const grd = document.getElementById("grade-band").value;
+        const exp = document.getElementById("home-exp").value;
+        const idx = hashCode(`${sid}|${grd}|${exp}`) % 3;
+        const arms = ["Arm1", "Arm2", "Arm3"];
+        startTs = Date.now();
+        audioClicks = 0;
+        setArm(arms[idx]);
+      });
+
+      document.querySelectorAll(".arm-btn").forEach(btn => {
+        btn.addEventListener("click", () => setArm(btn.dataset.arm));
+      });
+
+      function buildSparkSvg(hj, st) {
+        const w = 220, h = 44;
+        const mapPts = arr => arr.map((v, i) => {
+          const x = 10 + (i / (arr.length - 1)) * (w - 20);
+          const y = h - 6 - ((v - 15) / 45) * (h - 12);
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(" ");
+        return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="44" style="background:#f8fbfc;border:1px solid #dde8eb;border-radius:4px;">
+          <polyline fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,2" points="${mapPts(st)}" />
+          <polyline fill="none" stroke="#155e63" stroke-width="2.2" points="${mapPts(hj)}" />
+        </svg>`;
+      }
+
+      function renderStimuli() {
+        const grid = document.getElementById("stim-grid");
+        grid.innerHTML = "";
+        stimItems.forEach(it => {
+          const card = document.createElement("div");
+          card.className = "stim-card";
+          let bodyHtml = `<div class="stim-head"><span class="stim-title">${it.orthography}</span><span class="stim-cat">${it.category}</span></div>`;
+
+          if (currentArm === "Arm1") {
+            bodyHtml += `<div style="font-size:12.3px;color:#334155;line-height:1.55;"><strong>普通话简介：</strong>${it.artifact_desc}</div>`;
+            bodyHtml += `<div style="font-size:11px;color:#94a3b8;">[对照组屏蔽：1960潮拼、国际音标、基频曲线与空间锚点]</div>`;
+          } else if (currentArm === "Arm2") {
+            bodyHtml += `<div class="phon-strip"><strong>1960 潮拼：</strong>${it.pengim_shantou}<br/><strong>国际音标：</strong>${it.ipa_shantou}</div>`;
+            bodyHtml += `<button class="synth-btn" data-id="${it.id}">🔊 播放 F₀ 声调包络合成试听</button>`;
+            bodyHtml += `<div style="font-size:11px;color:#94a3b8;">[单模态组屏蔽：器物生计考据、正字纠偏与古村空间坐标]</div>`;
+          } else {
+            bodyHtml += `<div style="font-size:11.8px;color:#922b21;"><strong>俗称/易混校准：</strong>${it.folk_alias}</div>`;
+            bodyHtml += `<div class="phon-strip"><strong>1960 潮拼：</strong>${it.pengim_shantou}<br/><strong>国际音标：</strong>${it.ipa_shantou}</div>`;
+            bodyHtml += buildSparkSvg(it.f0_contour_haojiang, it.f0_contour_shantou);
+            bodyHtml += `<button class="synth-btn" data-id="${it.id}">🔊 播放 F₀ 声调包络合成试听（双腔实线:濠江 / 虚线:汕头）</button>`;
+            bodyHtml += `<div style="font-size:12px;color:#334155;line-height:1.5;"><strong>方言考据：</strong>${it.haojiang_accent_note}<br/><strong>器物生计：</strong>${it.artifact_desc}</div>`;
+            bodyHtml += `<div style="font-size:11.3px;color:#155e63;font-weight:600;">📍 空间锚定：濠江区${it.site_street} · ${it.site_village}</div>`;
+          }
+          card.innerHTML = bodyHtml;
+          grid.appendChild(card);
+        });
+
+        grid.querySelectorAll(".synth-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const item = seeds.find(s => s.id === btn.dataset.id);
+            if (item) playF0Contour(item.f0_contour_haojiang);
+          });
+        });
+      }
+
+      // Render Quiz
+      const qList = document.getElementById("quiz-list");
+      QUIZ.forEach((item, qIdx) => {
+        const div = document.createElement("div");
+        div.className = "quiz-item";
+        const optsHtml = item.opts.map((opt, oIdx) => `
+          <label class="opt-lbl">
+            <input type="radio" name="q_${qIdx}" value="${oIdx}" />
+            <span>${opt}</span>
+          </label>
+        `).join("");
+        div.innerHTML = `<div class="quiz-q">${item.q}</div><div class="quiz-opts">${optsHtml}</div>`;
+        qList.appendChild(div);
+      });
+
+      document.getElementById("btn-submit").addEventListener("click", () => {
+        let correct = 0;
+        let answered = 0;
+        const ansVec = [];
+        QUIZ.forEach((item, qIdx) => {
+          const sel = document.querySelector(`input[name="q_${qIdx}"]:checked`);
+          if (sel) {
+            answered++;
+            const v = Number(sel.value);
+            ansVec.push(v);
+            if (v === item.ans) correct++;
+          } else {
+            ansVec.push(-1);
+          }
+        });
+        const dwellSec = Math.floor((Date.now() - startTs) / 1000);
+        const pct = ((correct / QUIZ.length) * 100).toFixed(1);
+        const sid = document.getElementById("subj-id").value.trim() || "ANON";
+        const grd = document.getElementById("grade-band").value;
+        const exp = document.getElementById("home-exp").value;
+        const tsIso = new Date().toISOString();
+
+        lastRecordCsv = [
+          "subject_id,timestamp_utc,grade_stratum,home_dialect_exposure,assigned_arm,dwell_seconds,f0_synth_clicks,answered_count,correct_count,accuracy_pct",
+          `${sid},${tsIso},${grd},${exp},${currentArm},${dwellSec},${audioClicks},${answered},${correct},${pct}`
+        ].join("\n");
+
+        const rBox = document.getElementById("result-box");
+        rBox.style.display = "block";
+        rBox.innerHTML = `
+          <div style="font-size:15px;font-weight:700;color:#145a32;margin-bottom:5px;">
+            测评已完成：得分 ${correct} / ${QUIZ.length}（正确率 ${pct}%）｜ 已答 ${answered}/${QUIZ.length} 题
+          </div>
+          <div style="font-size:12.5px;color:#1e293b;line-height:1.6;">
+            • 受试编号：<strong>${sid}</strong> ｜ 分层：<strong>${grd} × ${exp}</strong> ｜ 实验臂：<strong>${ARM_META[currentArm].title}</strong><br/>
+            • 行为遥测：驻留时长 <strong>${dwellSec} 秒</strong>，触发 F₀ 声调包络合成试听 <strong>${audioClicks} 次</strong>。<br/>
+            • 统计对接说明：导出 CSV 后可直接输入项目代码库 <code>chaoyin_bowu_core/rct_analytics.py</code> 进行协方差分析（ANCOVA）。
+          </div>
+        `;
+        document.getElementById("btn-csv").style.display = "inline-block";
+      });
+
+      document.getElementById("btn-csv").addEventListener("click", () => {
+        if (!lastRecordCsv) return;
+        const blob = new Blob(["\uFEFF" + lastRecordCsv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `chaoyin_rct_record_${Date.now()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      renderStimuli();
+    })();
+  </script>
+</body>
+</html>
