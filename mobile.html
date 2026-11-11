@@ -360,8 +360,8 @@
         </div>
 
         <div class="audio-btns">
-          <button class="play-btn play-hj" id="btnPlayHj">🔊 听濠江代表腔</button>
-          <button class="play-btn play-st" id="btnPlaySt">🔉 听汕头市区对照腔</button>
+          <button class="play-btn play-hj" id="btnPlayHj">🔊 濠江腔 F₀ 声调试听</button>
+          <button class="play-btn play-st" id="btnPlaySt">🔉 市区腔 F₀ 对照试听</button>
         </div>
 
         <div class="f0-wrap">
@@ -408,7 +408,8 @@
   <script src="seed_data.js"></script>
   <script>
     (function () {
-      const items = window.CHAOYIN_SEED_ITEMS || [];
+      const items = (window.CHAOYIN_DATA && window.CHAOYIN_DATA.seedItems) || window.CHAOYIN_SEED_ITEMS || [];
+      if (!items.length) return;
       let currentStreet = "ALL";
       const params = new URLSearchParams(window.location.search);
       const initId = params.get("id");
