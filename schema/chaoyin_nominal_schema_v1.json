@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yuuqq.github.io/chaoyin-bowu/schema/chaoyin_nominal_schema_v1.json",
+  "title": "ChaoyinBowuNominalItemSchema",
+  "description": "粤东县域潮汕方言多模态博物图谱跨区县互操作数字标本数据标准（v1.0），支持汕头濠江试点向澄海、潮安、饶平、南澳、揭阳普宁等粤东县域直接扩展。",
+  "@context": {
+    "schema": "https://schema.org/",
+    "dc": "http://purl.org/dc/terms/",
+    "geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+    "id": "@id",
+    "orthography": "schema:name",
+    "folk_alias": "schema:alternateName",
+    "category": "dc:subject",
+    "artifact_desc": "schema:description",
+    "lat": "geo:lat",
+    "lng": "geo:long"
+  },
+  "type": "object",
+  "required": [
+    "id",
+    "orthography",
+    "folk_alias",
+    "category",
+    "pengim_shantou",
+    "ipa_shantou",
+    "haojiang_accent_note",
+    "f0_contour_haojiang",
+    "f0_contour_shantou",
+    "site_street",
+    "site_village",
+    "lat",
+    "lng",
+    "heritage_tag",
+    "artifact_desc",
+    "llm_hallucination_trap"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^CY-(AF|CR|PR)-[0-9]{3,4}$",
+      "description": "全库唯一标本编码：AF=农渔饮食风物，CR=非遗百工器物，PR=侨乡俗谚歌谣"
+    },
+    "county_code": {
+      "type": "string",
+      "default": "440512_HAOJIANG",
+      "description": "国家行政区划代码加县域标识（默认 440512_HAOJIANG 汕头市濠江区，跨县扩展时替换为 440515_CHENGHAI、445103_CHAOAN 等）"
+    },
+    "orthography": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 30,
+      "description": "经方言韵书与词典双盲考据核准的规范本字/正字词条名"
+    },
+    "folk_alias": {
+      "type": "string",
+      "minLength": 1,
+      "description": "田野口传异名、器物俗称或常见网络谐音误写对照"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "农渔饮食风物",
+        "非遗百工器物",
+        "侨乡俗谚歌谣"
+      ],
+      "description": "三大名物门类一级分类"
+    },
+    "pengim_shantou": {
+      "type": "string",
+      "minLength": 2,
+      "description": "1960年广东省教育部门《潮州话拼音方案》拼写（含1-8声调标号与连读分写）"
+    },
+    "ipa_shantou": {
+      "type": "string",
+      "pattern": "^\\[.+\\]$",
+      "description": "国际音标（IPA）宽式/严式记音，含鼻化韵、喉塞入声韵尾与五度制调值"
+    },
+    "haojiang_accent_note": {
+      "type": "string",
+      "minLength": 10,
+      "description": "县域代表点方言音韵特征、文白异读、连读变调及名物得名理据考释"
+    },
+    "f0_contour_haojiang": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "items": {
+        "type": "number",
+        "minimum": 10,
+        "maximum": 60
+      },
+      "description": "县域代表腔（如濠江海岛腔）归一化声调五度值包络采样序列（10-55区间映射赵元任五度标调1-5度）"
+    },
+    "f0_contour_shantou": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 16,
+      "items": {
+        "type": "number",
+        "minimum": 10,
+        "maximum": 60
+      },
+      "description": "潮汕市区参照腔归一化声调五度值包络采样序列，长度须与县域代表腔序列一致"
+    },
+    "site_street": {
+      "type": "string",
+      "minLength": 2,
+      "description": "采录点所属镇/街道名称"
+    },
+    "site_village": {
+      "type": "string",
+      "minLength": 2,
+      "description": "采录点所属传统村落、社区、渔港古墟或文化场馆名称"
+    },
+    "lat": {
+      "type": "number",
+      "minimum": 22.5,
+      "maximum": 24.5,
+      "description": "采录点 WGS-84 纬度坐标（粤东全域地理围栏 22.5°N–24.5°N）"
+    },
+    "lng": {
+      "type": "number",
+      "minimum": 115.5,
+      "maximum": 117.5,
+      "description": "采录点 WGS-84 经度坐标（粤东全域地理围栏 115.5°E–117.5°E）"
+    },
+    "heritage_tag": {
+      "type": "string",
+      "minLength": 4,
+      "description": "非遗保护级别、地理标志属性或田野建档标识"
+    },
+    "artifact_desc": {
+      "type": "string",
+      "minLength": 15,
+      "description": "器物形制、农渔制作工序、节俗仪式功能及聚落生计史背景"
+    },
+    "llm_hallucination_trap": {
+      "type": "string",
+      "minLength": 10,
+      "description": "通用大语言模型在该词条上高频出现的字面望文生义、读音混同或工序编造风险点"
+    }
+  },
+  "additionalProperties": true
+}
