@@ -1,6 +1,6 @@
 window.CHAOYIN_KG_DATA = {
   "graph_version": "v0.1",
-  "generated_at": "2026-11-11T22:05:24",
+  "generated_at": "2026-11-12T23:15:32",
   "pilot_county": "汕头市濠江区",
   "metrics": {
     "total_nodes": 108,
@@ -757,19 +757,19 @@ window.CHAOYIN_KG_DATA = {
     },
     {
       "id": "CY-PR-002",
-      "label": "家己人",
+      "label": "胶己人",
       "node_type": "NominalItem",
       "node_type_zh": "名物数字标本核心词条",
       "color": "#135d66",
       "degree": 10,
-      "full_orthography": "家己人",
+      "full_orthography": "胶己人",
       "pengim": "ga¹-gī⁷-nâng⁵",
       "ipa": "[ka˧-ki˩-naŋ˥]",
       "category": "侨乡俗谚歌谣"
     },
     {
       "id": "ALIAS-CY-PR-002",
-      "label": "误写谐音：胶己人",
+      "label": "自己人 / 同乡宗亲",
       "node_type": "FolkAliasOrTrap",
       "node_type_zh": "民间俗称与错字归并",
       "color": "#b03a2e",
@@ -993,7 +993,7 @@ window.CHAOYIN_KG_DATA = {
     },
     {
       "id": "MOR-GA-GI",
-      "label": "家己 ga¹-gī⁷（自家宗亲本字）",
+      "label": "胶己 ga¹-gī⁷（自己人通行词素）",
       "node_type": "KeyMorpheme",
       "node_type_zh": "潮语核心本字语素",
       "color": "#6c3483",
@@ -2221,7 +2221,7 @@ window.CHAOYIN_KG_DATA = {
       "source": "CY-PR-002",
       "target": "CY-PR-001",
       "relation": "QIAOPI_CULTURAL_COUPLED",
-      "label": "家己人互助熟语构成海外潮侨批信结社信用纽带",
+      "label": "胶己人互助熟语构成海外潮侨批信结社信用纽带",
       "is_cross_bridge": true
     },
     {

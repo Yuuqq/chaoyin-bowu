@@ -8,6 +8,6 @@
   - 达濠鱼丸标本深链：[`mobile.html?id=CY-AF-001`](https://yuuqq.github.io/chaoyin-bowu/mobile.html?id=CY-AF-001)
   - 木粿印标本深链：[`mobile.html?id=CY-CR-001`](https://yuuqq.github.io/chaoyin-bowu/mobile.html?id=CY-CR-001)
   - 蜈田村石门臼与砖石老门深链：[`mobile.html?id=CY-CR-004`](https://yuuqq.github.io/chaoyin-bowu/mobile.html?id=CY-CR-004)
-  - 家己人（正字溯源）标本深链：[`mobile.html?id=CY-PR-002`](https://yuuqq.github.io/chaoyin-bowu/mobile.html?id=CY-PR-002)
+  - 胶己人（侨乡熟语）标本深链：[`mobile.html?id=CY-PR-002`](https://yuuqq.github.io/chaoyin-bowu/mobile.html?id=CY-PR-002)
 - **跨区县互操作数字标本 JSON-LD Schema（v1.0）**：[`schema/chaoyin_nominal_schema_v1.json`](https://yuuqq.github.io/chaoyin-bowu/schema/chaoyin_nominal_schema_v1.json)
 

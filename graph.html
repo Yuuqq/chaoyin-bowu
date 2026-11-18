@@ -4,304 +4,535 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>潮音博物 · 异质知识图谱 v0.1 交互漫游台（108 节点 / 210 三元组）</title>
+  <link rel="stylesheet" href="./theme.css" />
   <style>
-    :root {
-      --bg-paper: #f6f4ef;
-      --card-bg: #ffffff;
-      --ink-primary: #1a252f;
-      --ink-secondary: #4a5968;
-      --teal-deep: #155e63;
-      --ochre-accent: #b86b23;
-      --crimson-warn: #a93226;
-      --border-soft: #dcd7cc;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
-      background: var(--bg-paper);
-      color: var(--ink-primary);
       height: 100vh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
     }
-    header {
-      background: linear-gradient(120deg, #0d2b36 0%, #155e63 60%, #1d4e56 100%);
-      color: #fff;
-      padding: 12px 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 3px solid #d4a359;
-      flex-shrink: 0;
-    }
-    .brand-left h1 { font-size: 19px; font-weight: 700; letter-spacing: 0.4px; }
-    .brand-left p { font-size: 11.5px; color: #d6e8ea; margin-top: 2px; }
-    .nav-strip { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .nav-pill {
-      text-decoration: none;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.28);
-      color: #f0f7f8;
-      padding: 6px 11px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      transition: all 0.18s;
-    }
-    .nav-pill:hover { background: rgba(212,163,89,0.34); border-color: #ffd98e; }
-    .nav-pill.active { background: rgba(212,163,89,0.38); border-color: #ffd98e; color: #fff6df; }
-    main {
-      display: grid;
-      grid-template-columns: 290px 1fr 350px;
-      gap: 12px;
-      padding: 12px 16px;
-      flex: 1;
-      min-height: 0;
-    }
-    .panel {
-      background: var(--card-bg);
-      border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      box-shadow: 0 2px 6px rgba(26,37,47,0.04);
-    }
-    .panel-title {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--teal-deep);
-      border-left: 4px solid var(--ochre-accent);
-      padding-left: 8px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .search-input {
+
+    main.graph-grid {
       width: 100%;
-      padding: 7px 10px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 12.5px;
-      margin-bottom: 8px;
-    }
-    .bridge-toggle {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      padding: 7px 9px;
-      background: #fdf2f0;
-      border: 1px solid #ebcdc8;
-      border-radius: 6px;
-      color: #922b21;
-      font-weight: 600;
-      margin-bottom: 10px;
-      cursor: pointer;
-    }
-    .type-list {
-      overflow-y: auto;
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 12px 20px 16px;
+      display: grid;
+      grid-template-columns: 292px 1fr 356px;
+      gap: 14px;
       flex: 1;
+      min-height: 0;
+    }
+
+    .panel-col {
+      padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
-      padding-right: 2px;
+      gap: 10px;
+      min-height: 0;
     }
-    .type-item {
+
+    .search-field {
+      width: 100%;
+      padding: 8px 11px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-strong);
+      background: var(--surface-subtle);
+      color: var(--ink-primary);
+      font-size: 12.5px;
+      font-family: inherit;
+      outline: none;
+    }
+    .search-field:focus {
+      background: #ffffff;
+      border-color: var(--celadon-700);
+      box-shadow: 0 0 0 3px rgba(15, 82, 90, 0.10);
+    }
+
+    .bridge-card {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 5px 8px;
-      border-radius: 5px;
-      border: 1px solid #eef2f5;
+      gap: 8px;
+      padding: 9px 11px;
+      border-radius: var(--r-md);
+      background: var(--err-bg);
+      border: 1px solid var(--err-border);
+      color: var(--err-700);
       font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       user-select: none;
     }
-    .type-item:hover { background: #f8fafc; }
-    .type-item.muted { opacity: 0.4; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 7px; }
+    .bridge-card input {
+      accent-color: var(--err-700);
+      width: 15px;
+      height: 15px;
+      cursor: pointer;
+    }
+
+    .type-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding-right: 3px;
+    }
+    .type-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 9px;
+      border-radius: var(--r-sm);
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-subtle);
+      font-size: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.15s, background 0.15s;
+    }
+    .type-item:hover {
+      background: #ffffff;
+    }
+    .type-item.muted {
+      opacity: 0.36;
+    }
+    .type-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .type-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .type-cnt {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+      background: #ffffff;
+      padding: 1px 6px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--border-hairline);
+    }
+
+    .hub-section {
+      padding-top: 8px;
+      border-top: 1px solid var(--border-hairline);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
     .hub-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 5px;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px dashed #dcd7cc;
     }
     .hub-chip {
+      border: 1px solid var(--border-hairline);
+      background: var(--surface-subtle);
+      color: var(--ink-primary);
       font-size: 11px;
-      padding: 3px 7px;
-      background: #eef6f7;
-      border: 1px solid #bcd6da;
-      color: #135d66;
-      border-radius: 4px;
+      font-weight: 600;
+      padding: 4px 9px;
+      border-radius: var(--r-pill);
       cursor: pointer;
+      transition: all 0.15s;
     }
-    .hub-chip:hover { background: #155e63; color: #fff; }
+    .hub-chip:hover {
+      background: var(--celadon-700);
+      border-color: var(--celadon-700);
+      color: #ffffff;
+    }
+
+    /* Center FigJam-style Graph Canvas */
+    .canvas-panel {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
     .canvas-wrap {
       position: relative;
       flex: 1;
-      background: radial-gradient(circle at center, #ffffff 0%, #f3f6f8 100%);
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--border-hairline);
+      background-color: #faf8f4;
+      background-image: radial-gradient(rgba(24, 34, 40, 0.12) 1px, transparent 1px);
+      background-size: 20px 20px;
       overflow: hidden;
     }
-    canvas { display: block; width: 100%; height: 100%; cursor: grab; }
-    canvas:active { cursor: grabbing; }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+
     .canvas-hud {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 12px;
+      left: 12px;
       display: flex;
+      align-items: center;
       gap: 6px;
-      pointer-events: auto;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 4px;
+      border-radius: var(--r-pill);
+      border: 1px solid var(--border-hairline);
+      box-shadow: var(--shadow-float);
     }
     .hud-btn {
-      padding: 5px 9px;
+      border: none;
+      background: transparent;
+      color: var(--ink-primary);
       font-size: 11.5px;
-      border: 1px solid #cbd5e1;
-      background: rgba(255,255,255,0.92);
-      border-radius: 5px;
-      cursor: pointer;
-      color: #1e293b;
       font-weight: 600;
+      padding: 5px 11px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
     }
-    .hud-btn:hover { background: #155e63; color: #fff; }
+    .hud-btn:hover {
+      background: var(--surface-sand);
+    }
+    .hud-btn.active {
+      background: var(--celadon-700);
+      color: #ffffff;
+    }
+    .hud-sep {
+      width: 1px;
+      height: 16px;
+      background: var(--border-hairline);
+    }
+
+    .hover-pill {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(24, 34, 40, 0.88);
+      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border-radius: var(--r-pill);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.12s;
+    }
+    .hover-pill.show {
+      opacity: 1;
+    }
+
     .canvas-tip {
       position: absolute;
-      bottom: 8px;
-      left: 12px;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.90);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-hairline);
+      padding: 5px 14px;
+      border-radius: var(--r-pill);
       font-size: 11px;
-      color: #64748b;
-      background: rgba(255,255,255,0.86);
-      padding: 3px 8px;
-      border-radius: 4px;
+      color: var(--ink-secondary);
+      white-space: nowrap;
+      pointer-events: none;
     }
+
+    /* Right Inspector */
     .entity-card {
-      background: #f8fbfb;
-      border: 1px solid #d4e4e6;
-      border-radius: 6px;
-      padding: 10px;
-      margin-bottom: 10px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--r-md);
+      padding: 13px;
+    }
+    .entity-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
     }
     .entity-badge {
-      display: inline-block;
-      font-size: 11px;
-      color: #fff;
-      padding: 2px 7px;
-      border-radius: 4px;
-      margin-bottom: 5px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #ffffff;
+      padding: 2px 9px;
+      border-radius: var(--r-pill);
     }
-    .entity-name { font-size: 16px; font-weight: 700; color: #0f293a; }
-    .entity-meta { font-size: 12px; color: #475569; margin-top: 4px; line-height: 1.5; }
+    .deg-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--celadon-900);
+      background: var(--celadon-100);
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+    }
+    .entity-name {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink-primary);
+      line-height: 1.3;
+    }
+    .entity-phon {
+      margin-top: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--r-sm);
+      padding: 7px 9px;
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: var(--ink-secondary);
+    }
+    .entity-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .act-pill {
+      flex: 1;
+      text-align: center;
+      text-decoration: none;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 6px 8px;
+      border-radius: var(--r-pill);
+      transition: all 0.15s;
+    }
+    .act-primary {
+      background: var(--celadon-700);
+      color: #ffffff;
+    }
+    .act-primary:hover {
+      background: var(--celadon-900);
+    }
+    .act-secondary {
+      background: #ffffff;
+      color: var(--celadon-900);
+      border: 1px solid var(--border-strong);
+    }
+    .act-secondary:hover {
+      border-color: var(--celadon-700);
+    }
+
     .triple-scroll {
       flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-bottom: 8px;
+      padding-right: 3px;
     }
     .triple-row {
-      font-size: 11.8px;
-      padding: 6px 8px;
-      background: #fcfcfb;
-      border: 1px solid #e6e2d8;
-      border-radius: 5px;
+      font-size: 12px;
+      padding: 8px 10px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--r-sm);
       cursor: pointer;
-      line-height: 1.45;
+      line-height: 1.5;
+      transition: border-color 0.15s, background 0.15s;
     }
-    .triple-row:hover { border-color: #155e63; background: #f2f9f9; }
-    .triple-row.bridge { background: #fff5f4; border-color: #e6b0aa; }
+    .triple-row:hover {
+      background: #ffffff;
+      border-color: var(--celadon-700);
+    }
+    .triple-row.bridge {
+      background: var(--err-bg);
+      border-color: var(--err-border);
+    }
     .rel-tag {
-      font-family: "Consolas", monospace;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--celadon-100);
+      color: var(--celadon-900);
+      padding: 1px 6px;
+      border-radius: var(--r-pill);
+      margin: 0 3px;
+    }
+    .triple-row.bridge .rel-tag {
+      background: rgba(179, 38, 30, 0.12);
+      color: var(--err-700);
+    }
+
+    .cypher-card {
+      background: var(--surface-code);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--r-md);
+      padding: 9px 11px;
+    }
+    .cypher-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-secondary);
+    }
+    .copy-cypher-btn {
+      border: 1px solid var(--border-hairline);
+      background: #ffffff;
+      color: var(--ink-primary);
       font-size: 10.5px;
-      background: #e8eef1;
-      color: #154360;
-      padding: 1px 5px;
-      border-radius: 3px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--r-pill);
+      cursor: pointer;
+    }
+    .copy-cypher-btn:hover {
+      border-color: var(--celadon-700);
+      color: var(--celadon-700);
     }
     .cypher-box {
-      background: #16242c;
-      color: #d8f3dc;
-      font-family: "Consolas", monospace;
+      font-family: var(--font-mono);
       font-size: 10.8px;
-      padding: 8px 10px;
-      border-radius: 6px;
-      line-height: 1.45;
-      max-height: 115px;
+      color: var(--celadon-900);
+      line-height: 1.5;
+      max-height: 86px;
       overflow-y: auto;
       white-space: pre-wrap;
+    }
+
+    @media (max-width: 1120px) {
+      body { height: auto; overflow: auto; }
+      main.graph-grid { grid-template-columns: 1fr; }
+      .canvas-wrap { min-height: 460px; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="brand-left">
-      <h1>潮音博物 · “音—物—地—艺”异质知识图谱 v0.1 漫游台</h1>
-      <p id="kg-subtitle">汕头市濠江区先导库 ｜ 正在加载图谱拓扑指标...</p>
-    </div>
-    <nav class="nav-strip">
-      <a class="nav-pill" href="index.html">🖥 主控导览台</a>
-      <a class="nav-pill active" href="graph.html">🕸 异质知识图谱</a>
-      <a class="nav-pill" href="experiment.html">🧪 三臂实验终端</a>
-      <a class="nav-pill" href="mobile.html?id=CY-AF-001">📱 手机扫码 H5</a>
+  <header class="app-bar">
+    <a class="brand-lockup" href="index.html">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="4" stroke="#F5E6C8" stroke-width="1.6"/>
+          <path d="M6.5 14C8.5 14 9 8.5 11.5 8.5C14 8.5 13.5 15.5 16 15.5C17.2 15.5 17.8 13 18.2 11.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title-row">
+          <span class="brand-name">潮音博物</span>
+          <span class="version-chip">知识图谱 v0.1</span>
+        </div>
+        <div class="brand-sub" id="kg-subtitle">汕头市濠江区“音—物—地—艺”多模态关联网络</div>
+      </div>
+    </a>
+
+    <nav class="nav-segmented" aria-label="主功能切换">
+      <a class="nav-tab" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="13" y1="9" x2="18" y2="9"/><line x1="13" y1="13" x2="18" y2="13"/></svg>
+        风物图鉴与声学台
+      </a>
+      <a class="nav-tab active" href="graph.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M10.5 7.2L6.4 15.8M13.5 7.2L17.6 15.8M7.5 18H16.5"/></svg>
+        知识图谱漫游
+      </a>
+      <a class="nav-tab" href="experiment.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v5.5L5.2 17.8A2 2 0 0 0 7 20.5h10a2 2 0 0 0 1.8-2.7L14 8.5V3"/></svg>
+        三臂对照实验
+      </a>
+      <a class="nav-tab" href="mobile.html?id=CY-AF-001">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2.5" width="10" height="19" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        手机扫码 H5
+      </a>
     </nav>
+
+    <div class="header-metrics">
+      <div class="stat-chip tnum"><span class="stat-dot"></span><strong id="kpi-nodes">108</strong> 节点 · <strong id="kpi-edges">210</strong> 三元组</div>
+      <div class="stat-chip tnum"><strong id="kpi-bridges">10</strong> 跨门类桥接</div>
+    </div>
   </header>
 
-  <main>
-    <!-- Left Filter Panel -->
-    <section class="panel">
-      <div class="panel-title">
-        <span>实体层与跨门类桥接筛选</span>
-        <span id="visible-count" style="font-size:11px;color:#64748b;"></span>
+  <main class="graph-grid">
+    <!-- Left Filter Rail -->
+    <section class="surface-card panel-col">
+      <div class="card-header" style="margin-bottom:0;padding-bottom:10px;">
+        <div>
+          <span class="eyebrow">Ontology Filter</span>
+          <h2 class="card-title">实体层与跨门类筛选</h2>
+        </div>
+        <span class="card-meta-pill tnum" id="visible-count">108/108</span>
       </div>
-      <input id="search-box" class="search-input" type="text" placeholder="检索词条、本字(拍/粿/鱼)、村落或工艺..." />
-      <label class="bridge-toggle">
+
+      <input id="search-box" class="search-field" type="text" placeholder="检索词条、本字（拍/粿/鱼）或村落…" />
+
+      <label class="bridge-card">
         <input type="checkbox" id="only-bridges" />
         <span>仅高亮 10 条跨门类语义桥接子图</span>
       </label>
+
       <div class="type-list" id="type-list"></div>
-      <div class="hub-chips">
-        <span style="width:100%;font-size:11px;color:#64748b;">高频枢纽节点直达：</span>
-        <button class="hub-chip" data-id="CY-AF-001">达濠鱼丸</button>
-        <button class="hub-chip" data-id="CY-AF-002">鱼饭</button>
-        <button class="hub-chip" data-id="CY-CR-006">杉木桶与铁匙</button>
-        <button class="hub-chip" data-id="CY-PR-001">侨批(番批)</button>
-        <button class="hub-chip" data-id="MOR-HI">本字:鱼 hî⁵</button>
-        <button class="hub-chip" data-id="MOR-GUE">本字:粿 guê²</button>
-        <button class="hub-chip" data-id="MOR-PHAH">本字:拍 phah⁴</button>
+
+      <div class="hub-section">
+        <span class="eyebrow" style="margin-bottom:0;">高频枢纽节点直达</span>
+        <div class="hub-chips">
+          <button class="hub-chip" data-id="CY-AF-001">达濠鱼丸</button>
+          <button class="hub-chip" data-id="CY-AF-002">鱼饭</button>
+          <button class="hub-chip" data-id="CY-CR-006">杉木桶与铁匙</button>
+          <button class="hub-chip" data-id="CY-PR-001">侨批（番批）</button>
+          <button class="hub-chip" data-id="MOR-HI">本字：鱼 hî⁵</button>
+          <button class="hub-chip" data-id="MOR-GUE">本字：粿 guê²</button>
+          <button class="hub-chip" data-id="MOR-PHAH">本字：拍 phah⁴</button>
+        </div>
       </div>
     </section>
 
-    <!-- Center Force/Shell Graph Canvas -->
-    <section class="panel" style="padding:10px;">
+    <!-- Center Interactive Canvas -->
+    <section class="surface-card canvas-panel">
       <div class="canvas-wrap" id="canvas-wrap">
         <canvas id="kg-canvas"></canvas>
         <div class="canvas-hud">
-          <button class="hud-btn" id="btn-reset">重置全局视图</button>
-          <button class="hud-btn" id="btn-layout">切换 力导向 / 同心环 布局</button>
+          <button class="hud-btn active" id="btn-shell">同心环拓扑</button>
+          <button class="hud-btn" id="btn-force">力导向松弛</button>
+          <span class="hud-sep"></span>
+          <button class="hud-btn" id="btn-zoom-in" title="放大">＋</button>
+          <button class="hud-btn" id="btn-zoom-out" title="缩小">－</button>
+          <button class="hud-btn" id="btn-reset">重置视图</button>
         </div>
-        <div class="canvas-tip">滚轮缩放 · 拖拽画布或节点 · 点击任意节点检视一跳语义三元组与 Neo4j Cypher</div>
+        <div class="hover-pill" id="hover-pill"></div>
+        <div class="canvas-tip">滚轮缩放 · 拖拽画布或节点 · 点击任意节点检视一跳语义三元组与 Cypher</div>
       </div>
     </section>
 
     <!-- Right Inspector Panel -->
-    <section class="panel">
-      <div class="panel-title">
-        <span>实体属性与一跳三元组检视器</span>
+    <section class="surface-card panel-col">
+      <div class="card-header" style="margin-bottom:0;padding-bottom:10px;">
+        <div>
+          <span class="eyebrow">Node Inspector</span>
+          <h2 class="card-title">实体属性与一跳三元组</h2>
+        </div>
       </div>
+
       <div class="entity-card" id="entity-card"></div>
-      <div style="font-size:12px;font-weight:700;color:#155e63;margin-bottom:6px;" id="triple-header">关联语义三元组</div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--celadon-900);" id="triple-header">关联语义三元组</div>
       <div class="triple-scroll" id="triple-list"></div>
-      <div style="font-size:11.5px;font-weight:700;color:#475569;margin-bottom:4px;">Neo4j Cypher 子图查询脚本</div>
-      <div class="cypher-box" id="cypher-box"></div>
+
+      <div class="cypher-card">
+        <div class="cypher-head">
+          <span>Neo4j Cypher 子图查询</span>
+          <button class="copy-cypher-btn" id="btn-copy-cypher">复制语句</button>
+        </div>
+        <div class="cypher-box" id="cypher-box"></div>
+      </div>
     </section>
   </main>
+
+  <div class="toast" id="toast">已复制</div>
 
   <script src="seed_data.js"></script>
   <script src="kg_data.js"></script>
@@ -310,13 +541,20 @@
       const KG = window.CHAOYIN_KG_DATA;
       const m = KG.metrics;
       document.getElementById("kg-subtitle").textContent =
-        `汕头市濠江区先导库 ｜ ${m.total_nodes} 个异质节点 · ${m.total_edges_triples} 条有向三元组 · ${m.node_types_count} 类实体 · ${m.relation_types_count} 类语义关系 · ${m.cross_category_bridges_count} 条跨门类桥接`;
+        `汕头市濠江区先导库 · ${m.total_nodes} 个异质节点 · ${m.total_edges_triples} 条语义三元组 · ${m.cross_category_bridges_count} 条跨门类桥接`;
+      document.getElementById("kpi-nodes").textContent = m.total_nodes;
+      document.getElementById("kpi-edges").textContent = m.total_edges_triples;
+      document.getElementById("kpi-bridges").textContent = m.cross_category_bridges_count;
+
+      const params = new URLSearchParams(window.location.search);
+      const focusParam = params.get("focus");
 
       const hiddenTypes = new Set();
       let onlyBridges = false;
       let searchTerm = "";
-      let selectedId = "CY-AF-001";
-      let layoutMode = "shell"; // 'shell' or 'force'
+      let selectedId = focusParam && KG.nodes.some(n => n.id === focusParam) ? focusParam : "CY-AF-001";
+      let hoveredNode = null;
+      let layoutMode = "shell";
 
       const nodeMap = new Map();
       const ringMap = {
@@ -325,13 +563,12 @@
         CraftAndMaterial: 4, FolkAliasOrTrap: 4
       };
 
-      // Initialize positions
       const groupedByRing = { 0: [], 1: [], 2: [], 3: [], 4: [] };
       KG.nodes.forEach(n => {
         const r = ringMap[n.node_type] ?? 3;
         groupedByRing[r].push(n);
       });
-      const ringRadii = { 0: 0, 1: 105, 2: 205, 3: 295, 4: 375 };
+      const ringRadii = { 0: 0, 1: 108, 2: 208, 3: 300, 4: 382 };
       Object.entries(groupedByRing).forEach(([r, arr]) => {
         arr.sort((a, b) => a.id.localeCompare(b.id));
         const rad = ringRadii[r];
@@ -347,13 +584,21 @@
         });
       });
 
-      // Render left type filter list
+      const toastEl = document.getElementById("toast");
+      let toastTimer = null;
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1600);
+      }
+
       const typeListEl = document.getElementById("type-list");
       Object.entries(KG.node_type_catalog).forEach(([ntype, info]) => {
         const cnt = m.node_type_breakdown[ntype] || 0;
         const div = document.createElement("div");
         div.className = "type-item";
-        div.innerHTML = `<span><span class="dot" style="background:${info.color}"></span>${info.zh}</span><strong>${cnt}</strong>`;
+        div.innerHTML = `<span class="type-left"><span class="type-dot" style="background:${info.color}"></span><span>${info.zh}</span></span><span class="type-cnt">${cnt}</span>`;
         div.addEventListener("click", () => {
           if (hiddenTypes.has(ntype)) {
             hiddenTypes.delete(ntype);
@@ -371,6 +616,7 @@
         onlyBridges = e.target.checked;
         draw();
       });
+
       document.getElementById("search-box").addEventListener("input", (e) => {
         searchTerm = e.target.value.trim().toLowerCase();
         if (searchTerm) {
@@ -383,15 +629,16 @@
         }
         draw();
       });
+
       document.querySelectorAll(".hub-chip").forEach(btn => {
         btn.addEventListener("click", () => selectNode(btn.dataset.id, true));
       });
 
-      // Canvas & Camera
       const wrap = document.getElementById("canvas-wrap");
       const canvas = document.getElementById("kg-canvas");
       const ctx = canvas.getContext("2d");
-      let camX = 0, camY = 0, camScale = 0.85;
+      const hoverPill = document.getElementById("hover-pill");
+      let camX = 0, camY = 0, camScale = 0.84;
       let draggingNode = null, panning = false, lastMX = 0, lastMY = 0;
 
       function resize() {
@@ -424,6 +671,16 @@
         return 6.2;
       }
 
+      function findHit(sx, sy) {
+        const w = screenToWorld(sx, sy);
+        for (let i = KG.nodes.length - 1; i >= 0; i--) {
+          const n = KG.nodes[i];
+          if (!isNodeVisible(n)) continue;
+          if (Math.hypot(n.x - w.x, n.y - w.y) <= nodeRadius(n) + 5) return n;
+        }
+        return null;
+      }
+
       function runForceRelaxation(steps) {
         const nodes = KG.nodes;
         for (let s = 0; s < steps; s++) {
@@ -431,8 +688,8 @@
             for (let j = i + 1; j < nodes.length; j++) {
               const a = nodes[i], b = nodes[j];
               let dx = b.x - a.x, dy = b.y - a.y;
-              let d2 = dx * dx + dy * dy + 40;
-              let f = 2600 / d2;
+              let d2 = dx * dx + dy * dy + 60;
+              let f = 4400 / d2;
               let d = Math.sqrt(d2);
               a.vx -= (dx / d) * f;
               a.vy -= (dy / d) * f;
@@ -445,8 +702,8 @@
             if (!a || !b) return;
             let dx = b.x - a.x, dy = b.y - a.y;
             let d = Math.hypot(dx, dy) || 1;
-            let target = e.is_cross_bridge ? 130 : 95;
-            let f = (d - target) * 0.025;
+            let target = e.is_cross_bridge ? 185 : 132;
+            let f = (d - target) * 0.022;
             a.vx += (dx / d) * f;
             a.vy += (dy / d) * f;
             b.vx -= (dx / d) * f;
@@ -454,29 +711,44 @@
           });
           nodes.forEach(n => {
             if (n.id === "COUNTY-HAOJIANG") { n.x = 0; n.y = 0; return; }
-            n.vx -= n.x * 0.008;
-            n.vy -= n.y * 0.008;
-            n.x += n.vx * 0.35;
-            n.y += n.vy * 0.35;
-            n.vx *= 0.65;
-            n.vy *= 0.65;
+            n.vx -= n.x * 0.004;
+            n.vy -= n.y * 0.004;
+            n.x += n.vx * 0.34;
+            n.y += n.vy * 0.34;
+            n.vx *= 0.64;
+            n.vy *= 0.64;
           });
         }
       }
 
-      document.getElementById("btn-layout").addEventListener("click", () => {
-        if (layoutMode === "shell") {
-          layoutMode = "force";
-          runForceRelaxation(90);
-        } else {
-          layoutMode = "shell";
-          KG.nodes.forEach(n => { n.x = n.sx; n.y = n.sy; });
-        }
+      const btnShell = document.getElementById("btn-shell");
+      const btnForce = document.getElementById("btn-force");
+      btnShell.addEventListener("click", () => {
+        layoutMode = "shell";
+        btnShell.classList.add("active");
+        btnForce.classList.remove("active");
+        KG.nodes.forEach(n => { n.x = n.sx; n.y = n.sy; });
+        draw();
+      });
+      btnForce.addEventListener("click", () => {
+        layoutMode = "force";
+        btnForce.classList.add("active");
+        btnShell.classList.remove("active");
+        runForceRelaxation(130);
+        draw();
+      });
+
+      document.getElementById("btn-zoom-in").addEventListener("click", () => {
+        camScale = Math.min(2.6, camScale * 1.18);
+        draw();
+      });
+      document.getElementById("btn-zoom-out").addEventListener("click", () => {
+        camScale = Math.max(0.35, camScale * 0.85);
         draw();
       });
 
       document.getElementById("btn-reset").addEventListener("click", () => {
-        camX = 0; camY = 0; camScale = 0.85;
+        camX = 0; camY = 0; camScale = 0.84;
         onlyBridges = false;
         document.getElementById("only-bridges").checked = false;
         hiddenTypes.clear();
@@ -488,15 +760,7 @@
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left, my = e.clientY - rect.top;
         lastMX = mx; lastMY = my;
-        const w = screenToWorld(mx, my);
-        let hit = null;
-        for (let i = KG.nodes.length - 1; i >= 0; i--) {
-          const n = KG.nodes[i];
-          if (!isNodeVisible(n)) continue;
-          if (Math.hypot(n.x - w.x, n.y - w.y) <= nodeRadius(n) + 4) {
-            hit = n; break;
-          }
-        }
+        const hit = findHit(mx, my);
         if (hit) {
           draggingNode = hit;
           selectNode(hit.id, false);
@@ -506,7 +770,6 @@
       });
 
       window.addEventListener("mousemove", (e) => {
-        if (!draggingNode && !panning) return;
         const rect = canvas.getBoundingClientRect();
         const mx = e.clientX - rect.left, my = e.clientY - rect.top;
         if (draggingNode) {
@@ -514,11 +777,27 @@
           draggingNode.x = w.x;
           draggingNode.y = w.y;
           draw();
-        } else if (panning) {
+          return;
+        }
+        if (panning) {
           camX += mx - lastMX;
           camY += my - lastMY;
           lastMX = mx; lastMY = my;
           draw();
+          return;
+        }
+        if (mx >= 0 && my >= 0 && mx <= rect.width && my <= rect.height) {
+          const hit = findHit(mx, my);
+          if (hit !== hoveredNode) {
+            hoveredNode = hit;
+            canvas.style.cursor = hit ? "pointer" : "grab";
+            if (hit) {
+              hoverPill.textContent = `${hit.node_type_zh}：${hit.label}（连接度 ${hit.degree}）`;
+              hoverPill.classList.add("show");
+            } else {
+              hoverPill.classList.remove("show");
+            }
+          }
         }
       });
       window.addEventListener("mouseup", () => { draggingNode = null; panning = false; });
@@ -547,18 +826,20 @@
         const isNominal = n.node_type === "NominalItem";
         let extraHtml = "";
         if (n.pengim) {
-          extraHtml += `<div class="entity-meta"><strong>1960 潮拼：</strong>${n.pengim}<br/><strong>国际音标：</strong>${n.ipa || ""}</div>`;
+          extraHtml += `<div class="entity-phon"><div><strong>1960 潮拼：</strong><span class="mono">${n.pengim}</span></div><div><strong>国际音标：</strong><span class="mono">${n.ipa || ""}</span></div></div>`;
         }
         if (isNominal) {
-          extraHtml += `<div style="margin-top:8px;display:flex;gap:6px;">
-            <a href="mobile.html?id=${n.id}" style="font-size:11.5px;padding:4px 8px;background:#155e63;color:#fff;border-radius:4px;text-decoration:none;">📱 打开扫码导览卡</a>
-            <a href="index.html" style="font-size:11.5px;padding:4px 8px;background:#eef5f6;color:#155e63;border:1px solid #b5cfd3;border-radius:4px;text-decoration:none;">🖥 主控台检视</a>
+          extraHtml += `<div class="entity-actions">
+            <a class="act-pill act-primary" href="index.html?id=${n.id}">声学图鉴详情 ↗</a>
+            <a class="act-pill act-secondary" href="mobile.html?id=${n.id}">手机扫码卡 ↗</a>
           </div>`;
         }
         card.innerHTML = `
-          <span class="entity-badge" style="background:${n.color}">${n.node_type_zh} · ${n.id}</span>
+          <div class="entity-top">
+            <span class="entity-badge" style="background:${n.color}">${n.node_type_zh} · ${n.id}</span>
+            <span class="deg-pill">度 ${n.degree}</span>
+          </div>
           <div class="entity-name">${n.full_orthography || n.label}</div>
-          <div class="entity-meta">图谱连接度（Degree）：<strong>${n.degree}</strong></div>
           ${extraHtml}
         `;
 
@@ -571,14 +852,21 @@
           const otherId = e.source === n.id ? e.target : e.source;
           const row = document.createElement("div");
           row.className = "triple-row" + (e.is_cross_bridge ? " bridge" : "");
-          row.innerHTML = `<strong>${sNode ? sNode.label : e.source}</strong> <span class="rel-tag">${e.relation}</span> <strong>${tNode ? tNode.label : e.target}</strong><div style="color:#64748b;font-size:11px;margin-top:2px;">↳ ${e.label}</div>`;
+          row.innerHTML = `<strong>${sNode ? sNode.label : e.source}</strong><span class="rel-tag">${e.relation}</span><strong>${tNode ? tNode.label : e.target}</strong><div style="color:var(--ink-muted);font-size:11px;margin-top:3px;">${e.label}</div>`;
           row.addEventListener("click", () => selectNode(otherId, false));
           tList.appendChild(row);
         });
 
-        const cypher = `// 查询节点 ${n.id} (${n.label}) 的一跳多模态子图\nMATCH (center {id: '${n.id}'})-[r]-(neighbor)\nRETURN center, type(r) AS relation, r.note AS note, neighbor;`;
+        const cypher = `// 查询节点 ${n.id}（${n.label}）的一跳多模态子图\nMATCH (center {id: '${n.id}'})-[r]-(neighbor)\nRETURN center, type(r) AS relation, r.note AS note, neighbor;`;
         document.getElementById("cypher-box").textContent = cypher;
       }
+
+      document.getElementById("btn-copy-cypher").addEventListener("click", () => {
+        const txt = document.getElementById("cypher-box").textContent;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(() => showToast("已复制 Neo4j Cypher 语句"));
+        }
+      });
 
       function draw() {
         const w = wrap.clientWidth, h = wrap.clientHeight;
@@ -588,11 +876,11 @@
         ctx.scale(camScale, camScale);
 
         if (layoutMode === "shell") {
-          [105, 205, 295, 375].forEach(rad => {
+          [108, 208, 300, 382].forEach(rad => {
             ctx.beginPath();
             ctx.arc(0, 0, rad, 0, Math.PI * 2);
-            ctx.strokeStyle = "#e2e8f0";
-            ctx.setLineDash([4, 4]);
+            ctx.strokeStyle = "rgba(15, 82, 90, 0.10)";
+            ctx.setLineDash([4, 5]);
             ctx.lineWidth = 1;
             ctx.stroke();
           });
@@ -617,48 +905,68 @@
             const my = (a.y + b.y) / 2 + (b.x - a.x) * 0.18;
             ctx.moveTo(a.x, a.y);
             ctx.quadraticCurveTo(mx, my, b.x, b.y);
-            ctx.strokeStyle = "#c0392b";
-            ctx.lineWidth = active ? 2.4 : 1.5;
+            ctx.strokeStyle = active ? "#B3261E" : "rgba(179, 38, 30, 0.72)";
+            ctx.lineWidth = active ? 2.5 : 1.5;
           } else {
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = active ? "#155e63" : "rgba(148, 163, 184, 0.28)";
+            ctx.strokeStyle = active ? "#0F525A" : "rgba(112, 127, 138, 0.22)";
             ctx.lineWidth = active ? 1.8 : 0.8;
           }
           ctx.stroke();
         });
 
-        KG.nodes.forEach(n => {
-          if (!isNodeVisible(n)) return;
-          visNodes++;
+        // Draw non-selected nodes first, then selected + 1-hop neighbors on top for clean layering
+        const orderedNodes = [];
+        KG.nodes.forEach(n => { if (!isNodeVisible(n)) return; visNodes++; if (!neighborSet.has(n.id)) orderedNodes.push(n); });
+        KG.nodes.forEach(n => { if (!isNodeVisible(n)) return; if (neighborSet.has(n.id) && n.id !== selectedId) orderedNodes.push(n); });
+        const selObj = nodeMap.get(selectedId);
+        if (selObj && isNodeVisible(selObj)) orderedNodes.push(selObj);
+
+        orderedNodes.forEach(n => {
           const rad = nodeRadius(n);
           const isSel = n.id === selectedId;
           const isNbr = neighborSet.has(n.id);
           const matchSearch = searchTerm && (n.label.toLowerCase().includes(searchTerm) || n.id.toLowerCase().includes(searchTerm));
 
-          ctx.globalAlpha = (!selectedId || isNbr || onlyBridges || matchSearch) ? 1.0 : 0.32;
+          ctx.globalAlpha = (!selectedId || isNbr || onlyBridges || matchSearch) ? 1.0 : 0.25;
+          if (isSel) {
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, rad + 6, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(15, 82, 90, 0.18)";
+            ctx.fill();
+          }
+
           ctx.beginPath();
           ctx.arc(n.x, n.y, rad, 0, Math.PI * 2);
           ctx.fillStyle = n.color;
           ctx.fill();
-          ctx.lineWidth = isSel || matchSearch ? 3 : 1.2;
-          ctx.strokeStyle = isSel || matchSearch ? "#f39c12" : "#ffffff";
+          ctx.lineWidth = isSel || matchSearch ? 2.6 : 1.4;
+          ctx.strokeStyle = isSel || matchSearch ? "#C05F1D" : "#FFFFFF";
           ctx.stroke();
 
-          if (isSel || isNbr || n.node_type === "NominalItem" || n.node_type === "CountyUnit" || camScale > 1.25) {
-            ctx.font = (isSel || n.node_type === "NominalItem") ? "bold 11px 'Microsoft YaHei'" : "10px 'Microsoft YaHei'";
-            ctx.fillStyle = "#0f172a";
+          const showLbl = isSel || isNbr || n.node_type === "CountyUnit" ||
+            (layoutMode === "shell" && n.node_type === "NominalItem") || camScale > 1.28;
+          if (showLbl) {
+            ctx.font = (isSel || n.node_type === "NominalItem")
+              ? "700 11px 'PingFang SC', 'Microsoft YaHei', sans-serif"
+              : "600 10px 'PingFang SC', 'Microsoft YaHei', sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(n.label, n.x, n.y + rad + 12);
+            ctx.lineJoin = "round";
+            ctx.strokeStyle = "rgba(250, 248, 244, 0.94)";
+            ctx.lineWidth = 3.8;
+            ctx.strokeText(n.label, n.x, n.y + rad + 13);
+            ctx.fillStyle = isSel ? "#0B3940" : "#182228";
+            ctx.fillText(n.label, n.x, n.y + rad + 13);
           }
         });
         ctx.globalAlpha = 1.0;
         ctx.restore();
-        document.getElementById("visible-count").textContent = `当前可见 ${visNodes}/${m.total_nodes}`;
+        document.getElementById("visible-count").textContent = `${visNodes}/${m.total_nodes}`;
       }
 
       resize();
-      selectNode("CY-AF-001", false);
+      selectNode(selectedId, focusParam ? true : false);
     })();
   </script>
 </body>

@@ -59,7 +59,7 @@ window.CHAOYIN_DATA = {
     ]
   },
   "verifiedFacts": {
-    "generated_at": "2026-11-11T20:46:09.890290",
+    "generated_at": "2026-11-12T15:48:19.113804",
     "generator_script": "scripts/01_extract_verified_facts.py",
     "dialect_platform_fate": {
       "source_repo": "Yuuqq/data-vis-dialect-platform-fate",
@@ -104,12 +104,42 @@ window.CHAOYIN_DATA = {
       "china_mandarin_below5_pct": 24.44,
       "mean_rating_delta": 0.51
     },
+    "walk_in_cs": {
+      "source_repo": "Yuuqq/walk-in-cs",
+      "release_version": "1.0.3",
+      "covered_cities_count": 4,
+      "total_verified_spots": 96,
+      "shantou_spots": 48,
+      "chaozhou_spots": 18,
+      "jieyang_spots": 15,
+      "shanwei_spots": 15,
+      "total_food_images_indexed": 140,
+      "geofence_min_m": 80,
+      "geofence_max_m": 120
+    },
+    "qiaopi_agent": {
+      "source_repo": "Yuuqq/Qiaopi-Agent",
+      "root_python_modules_count": 19,
+      "sample_modules": [
+        "agents.py",
+        "ai_agent_advanced_demo.py",
+        "ai_agent_dashboard.py",
+        "ai_agent_demo.py",
+        "ai_agent_visualizer.py",
+        "analysis.py"
+      ]
+    },
     "haojiang_field_survey": {
       "surveyed_district": "汕头市濠江区",
       "surveyed_street": "礐石街道",
       "hongguang_report_chars": 13094,
       "hongguang_tables_count": 2,
       "hongguang_award_confirmed_by_pi": true,
+      "hongguang_award_year": 2025,
+      "hongguang_award_event": "2025年“多彩乡村 向新而行”系列实践活动",
+      "hongguang_award_organizers_count": 12,
+      "hongguang_award_tier": "一等奖",
+      "hongguang_award_work_title": "《从“杨桃之乡”到“明星村庄”》",
       "wutian_photo_notes_count": 6,
       "wutian_notes_chars": 279,
       "wutian_highres_jpg_count": 5,
@@ -124,6 +154,21 @@ window.CHAOYIN_DATA = {
       "n_utterances": 12500,
       "source_note": "Public benchmark literature: 20 native speakers, 12,500 orthographic-annotated utterances; lacks Haojiang coastal island accent and artifact-place multimodal binding."
     },
+    "verified_literature": {
+      "total_verified_citations": 18,
+      "exa_http200_runs": 14,
+      "tavily_http200_runs": 6,
+      "teochew_wild_hours": 18.9,
+      "teochew_bench_items": 300,
+      "teochew_bench_models": 11,
+      "teochew_bench_low_spec_chrf": 69.25,
+      "teochew_bench_high_spec_chrf": 27.52,
+      "dialectbench_varieties": 281,
+      "regiozh_items": 2607,
+      "regiozh_models": 11,
+      "regiozh_max_gap_pp": 29.4,
+      "teng2023_rct_n": 125
+    },
     "prototype_v01_seed": {
       "total_seed_items": 18,
       "category_counts": {
@@ -132,7 +177,79 @@ window.CHAOYIN_DATA = {
         "侨乡俗谚歌谣": 6
       },
       "covered_haojiang_streets_count": 4,
-      "covered_haojiang_sites_count": 5
+      "covered_haojiang_sites_count": 5,
+      "edu_cards_sample_count": 3,
+      "village_plaque_sample_count": 1,
+      "sop_manual_chapters": 6,
+      "sop_manual_chars": 3658,
+      "workbook_units": 5,
+      "workbook_chars": 4160,
+      "schema_required_fields": 16,
+      "live_pc_url": "https://yuuqq.github.io/chaoyin-bowu/",
+      "live_mobile_url": "https://yuuqq.github.io/chaoyin-bowu/mobile.html",
+      "live_graph_url": "https://yuuqq.github.io/chaoyin-bowu/graph.html",
+      "live_experiment_url": "https://yuuqq.github.io/chaoyin-bowu/experiment.html"
+    },
+    "knowledge_graph_v01": {
+      "total_nodes": 108,
+      "total_edges_triples": 210,
+      "node_types_count": 11,
+      "relation_types_count": 14,
+      "cross_category_bridges_count": 10,
+      "key_morpheme_nodes_count": 18,
+      "craft_material_nodes_count": 24
+    },
+    "rct_power_simulation": {
+      "n_monte_carlo_runs": 2000,
+      "attrition_7d_rate_pct": 15.0,
+      "harsh_attrition_7d_rate_pct": 25.0,
+      "planned_n_min": 160,
+      "planned_n_max": 240,
+      "planned_mde_overall_min_1dec_pp": 8.1,
+      "planned_mde_overall_max_1dec_pp": 10.6,
+      "target_enrolled_n": 200,
+      "target_effective_7d_n": 168,
+      "target_power_omnibus_pct": 100.0,
+      "target_power_arm3_vs_arm1_pct": 100.0,
+      "target_power_arm3_vs_arm2_pct": 98.8,
+      "mde_80pct_power_pp": 8.94,
+      "harsh_25pct_attrition_h3b_power_pct": 96.1
+    },
+    "software_ip_pack": {
+      "core_python_modules_count": 5,
+      "automated_unit_tests_count": 8,
+      "compiled_non_empty_code_lines": 2950,
+      "estimated_cpcc_code_pages": 55.7
+    },
+    "pilot_rag_benchmark": {
+      "n_questions_total": 42,
+      "n_in_domain": 36,
+      "n_placebo_out_of_kb": 6,
+      "total_api_evaluations": 168,
+      "http_failures_count": 0,
+      "models_count": 2,
+      "retriever_top1_recall_pct": 100.0,
+      "pooled_zero_shot_strict_acc_pct": 31.0,
+      "pooled_rag_strict_acc_pct": 96.4,
+      "pooled_strict_acc_gain_pp": 65.4,
+      "pooled_zero_shot_pengim_acc_pct": 8.3,
+      "pooled_rag_pengim_acc_pct": 100.0,
+      "pooled_zero_shot_craft_acc_pct": 44.4,
+      "pooled_rag_craft_acc_pct": 91.7,
+      "pooled_zero_shot_halluc_pct": 69.0,
+      "pooled_rag_halluc_pct": 3.6,
+      "pooled_zero_shot_placebo_fab_pct": 41.7,
+      "pooled_rag_placebo_fab_pct": 0.0,
+      "pooled_rag_placebo_abstain_pct": 100.0,
+      "sn_zero_shot_acc_pct": 23.8,
+      "sn_rag_acc_pct": 92.9,
+      "sn_zero_shot_pengim_pct": 5.6,
+      "sn_zero_shot_placebo_fab_pct": 83.3,
+      "sn_rag_halluc_pct": 7.1,
+      "glm_zero_shot_acc_pct": 38.1,
+      "glm_rag_acc_pct": 100.0,
+      "glm_zero_shot_pengim_pct": 11.1,
+      "glm_rag_halluc_pct": 0.0
     },
     "budget": {
       "科研业务费": 5.2,
@@ -578,12 +695,12 @@ window.CHAOYIN_DATA = {
     },
     {
       "id": "CY-PR-002",
-      "orthography": "家己人",
-      "folk_alias": "误写谐音：胶己人",
+      "orthography": "胶己人",
+      "folk_alias": "自己人 / 同乡宗亲",
       "category": "侨乡俗谚歌谣",
       "pengim_shantou": "ga¹-gī⁷-nâng⁵",
       "ipa_shantou": "[ka˧-ki˩-naŋ˥]",
-      "haojiang_accent_note": "正字本为“家己人”，其中“己”读阳去调 gī⁷；短视频谐音梗常误作“胶己人”，亟需正字溯源校准。",
+      "haojiang_accent_note": "海内外潮人指代“自己人、同乡宗亲”的通行熟语，其中“己”读阳去调 gī⁷，语调沉稳亲切。",
       "f0_contour_haojiang": [
         33,
         33,
@@ -605,8 +722,8 @@ window.CHAOYIN_DATA = {
       "lat": 23.2565,
       "lng": 116.7586,
       "heritage_tag": "海内外潮人社群认同核心熟语",
-      "artifact_desc": "俗谚云“家己人，拍死无相干”，原为海外潮侨互助结社的信任口令，体现宗族与乡党守望相助传统。",
-      "llm_hallucination_trap": "无正字约束的大模型在生成文创文案时高频输出错别字“胶己人”，消解历史文字理据。"
+      "artifact_desc": "俗谚云“胶己人，拍死无相干”，原为海外潮侨互助结社的信任口令，体现宗族与乡党守望相助传统。",
+      "llm_hallucination_trap": "通用大模型常按普通话字面拆解“胶”字，生硬曲解为橡胶制品或胶水黏合。"
     },
     {
       "id": "CY-PR-003",
