@@ -115,51 +115,157 @@
     svg._tone = { x0: o.padL, x1: o.padL + pw };
   }
 
-  var actx = null, raf = 0;
-  function playTone(svg, seq, baseHz, color) {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return false;
-    actx = actx || new AC();
-    if (actx.state === "suspended") actx.resume();
-    var ctx = actx, now = ctx.currentTime, dur = Math.max(0.8, seq.length * 0.14);
+  var actx = null, raf = 0, activeAudio = null, activeBtn = null, activeSvg = null;
 
-    var lp = ctx.createBiquadFilter();
-    lp.type = "lowpass";
-    lp.frequency.setValueAtTime(1500, now);
-    var o1 = ctx.createOscillator(), o2 = ctx.createOscillator();
-    var g1 = ctx.createGain(), g2 = ctx.createGain(), m = ctx.createGain();
-    o1.type = "triangle"; o2.type = "sine";
-    seq.forEach(function (v, i) {
-      var t = now + (i / Math.max(1, seq.length - 1)) * dur;
-      var hz = baseHz * Math.pow(2, (toDeg(v) - 3) * 0.18);
-      if (i === 0) { o1.frequency.setValueAtTime(hz, t); o2.frequency.setValueAtTime(hz * 2, t); }
-      else { o1.frequency.linearRampToValueAtTime(hz, t); o2.frequency.linearRampToValueAtTime(hz * 2, t); }
-    });
-    g1.gain.value = 0.85; g2.gain.value = 0.14;
-    m.gain.setValueAtTime(0.0001, now);
-    m.gain.linearRampToValueAtTime(0.2, now + 0.05);
-    m.gain.setValueAtTime(0.18, now + dur - 0.08);
-    m.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.04);
-    o1.connect(g1); o2.connect(g2); g1.connect(lp); g2.connect(lp); lp.connect(m); m.connect(ctx.destination);
-    o1.start(now); o2.start(now); o1.stop(now + dur + 0.06); o2.stop(now + dur + 0.06);
+  function hidePlayhead(svg) {
+    var line = svg && svg.querySelector(".playhead");
+    if (line) line.style.visibility = "hidden";
+  }
+
+  function stopAudio() {
+    cancelAnimationFrame(raf);
+    raf = 0;
+    if (activeAudio) {
+      try {
+        activeAudio.onended = null;
+        activeAudio.onerror = null;
+        activeAudio.pause();
+        activeAudio.currentTime = 0;
+      } catch (e) {}
+      activeAudio = null;
+    }
+    if (activeBtn) {
+      activeBtn.classList.remove("playing");
+      if (activeBtn._idleLabel) activeBtn.textContent = activeBtn._idleLabel;
+      activeBtn = null;
+    }
+    if (activeSvg) {
+      hidePlayhead(activeSvg);
+      activeSvg = null;
+    }
+  }
+
+  function playToneFallback(svg, seq, baseHz, color, btn) {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC || !seq || !seq.length) return false;
+    actx = actx || new AC();
+    var startSynth = function () {
+      var ctx = actx, now = ctx.currentTime + 0.02, dur = Math.max(0.95, seq.length * 0.17);
+      var bp = ctx.createBiquadFilter();
+      bp.type = "lowpass";
+      bp.frequency.setValueAtTime(2800, now);
+      bp.Q.setValueAtTime(1.4, now);
+      var o1 = ctx.createOscillator(), o2 = ctx.createOscillator();
+      var g1 = ctx.createGain(), g2 = ctx.createGain(), m = ctx.createGain();
+      o1.type = "sawtooth";
+      o2.type = "triangle";
+      seq.forEach(function (v, i) {
+        var t = now + (i / Math.max(1, seq.length - 1)) * dur;
+        var hz = (baseHz || 195) * Math.pow(2, (toDeg(v) - 3) * 0.19);
+        if (i === 0) { o1.frequency.setValueAtTime(hz, t); o2.frequency.setValueAtTime(hz * 2, t); }
+        else { o1.frequency.linearRampToValueAtTime(hz, t); o2.frequency.linearRampToValueAtTime(hz * 2, t); }
+      });
+      g1.gain.value = 0.65;
+      g2.gain.value = 0.25;
+      m.gain.setValueAtTime(0.0001, now);
+      m.gain.linearRampToValueAtTime(0.38, now + 0.04);
+      m.gain.setValueAtTime(0.34, now + dur - 0.08);
+      m.gain.exponentialRampToValueAtTime(0.0001, now + dur + 0.04);
+      o1.connect(g1); o2.connect(g2); g1.connect(bp); g2.connect(bp); bp.connect(m); m.connect(ctx.destination);
+      o1.start(now); o2.start(now); o1.stop(now + dur + 0.06); o2.stop(now + dur + 0.06);
+
+      var line = svg && svg.querySelector(".playhead"), meta = svg && svg._tone;
+      if (line && meta) {
+        activeSvg = svg;
+        line.setAttribute("stroke", color || "#16140f");
+        line.style.visibility = "visible";
+        var t0 = performance.now();
+        var step = function (t) {
+          var p = Math.min(1, (t - t0) / (dur * 1000));
+          var x = meta.x0 + p * (meta.x1 - meta.x0);
+          line.setAttribute("x1", x.toFixed(1));
+          line.setAttribute("x2", x.toFixed(1));
+          if (p < 1) raf = requestAnimationFrame(step);
+          else stopAudio();
+        };
+        raf = requestAnimationFrame(step);
+      } else {
+        setTimeout(stopAudio, dur * 1000 + 80);
+      }
+    };
+    if (actx.state === "suspended") actx.resume().then(startSynth);
+    else startSynth();
+    return true;
+  }
+
+  // 播放预生成的 MP3 音频（kind: "guide" | "hj" | "st"），同时驱动声调走势游标；若离线缺失音频文件则回退到声学合成
+  function playClip(opts) {
+    opts = opts || {};
+    var btn = opts.btn || null;
+    if (btn && activeBtn === btn && activeAudio && !activeAudio.paused) {
+      stopAudio();
+      return;
+    }
+    stopAudio();
+
+    var kind = opts.kind || "hj";
+    var id = opts.id || (opts.item && opts.item.id) || "";
+    var src = opts.src || ("./audio/" + kind + "/" + id + ".mp3");
+    var svg = opts.svg || null;
+    var color = opts.color || "#a8321d";
+
+    if (btn) {
+      if (!btn._idleLabel) btn._idleLabel = btn.textContent;
+      btn.textContent = btn.getAttribute("data-stop-label") || "■ 停止";
+      btn.classList.add("playing");
+      activeBtn = btn;
+    }
+
+    var audio = new Audio(src);
+    audio.preload = "auto";
+    activeAudio = audio;
+    activeSvg = svg;
 
     var line = svg && svg.querySelector(".playhead"), meta = svg && svg._tone;
-    cancelAnimationFrame(raf);
     if (line && meta) {
-      line.setAttribute("stroke", color || "#16140f");
+      line.setAttribute("stroke", color);
       line.style.visibility = "visible";
-      var t0 = performance.now();
-      var step = function (t) {
-        var p = Math.min(1, (t - t0) / (dur * 1000));
-        var x = meta.x0 + p * (meta.x1 - meta.x0);
-        line.setAttribute("x1", x.toFixed(1));
-        line.setAttribute("x2", x.toFixed(1));
-        if (p < 1) raf = requestAnimationFrame(step);
-        else line.style.visibility = "hidden";
+      line.setAttribute("x1", meta.x0.toFixed(1));
+      line.setAttribute("x2", meta.x0.toFixed(1));
+      var tick = function () {
+        if (activeAudio !== audio) return;
+        var dur = audio.duration;
+        if (dur && isFinite(dur) && dur > 0) {
+          var p = Math.min(1, Math.max(0, audio.currentTime / dur));
+          var x = meta.x0 + p * (meta.x1 - meta.x0);
+          line.setAttribute("x1", x.toFixed(1));
+          line.setAttribute("x2", x.toFixed(1));
+        }
+        if (!audio.paused && !audio.ended) raf = requestAnimationFrame(tick);
       };
-      raf = requestAnimationFrame(step);
+      raf = requestAnimationFrame(tick);
     }
-    return true;
+
+    var fallback = function () {
+      if (activeAudio !== audio) return;
+      activeAudio = null;
+      if (opts.seq && opts.seq.length) {
+        playToneFallback(svg, opts.seq, opts.baseHz || 195, color, btn);
+      } else {
+        stopAudio();
+      }
+    };
+
+    audio.onended = function () { if (activeAudio === audio) stopAudio(); };
+    audio.onerror = fallback;
+    var pr = audio.play();
+    if (pr && typeof pr.catch === "function") pr.catch(fallback);
+    return audio;
+  }
+
+  function playTone(svg, seq, baseHz, color) {
+    stopAudio();
+    return playToneFallback(svg, seq, baseHz, color, null);
   }
 
   // 点位示意图：按实测经纬度落点，配经纬网格，不画海岸线
@@ -218,6 +324,8 @@
     villageShort: villageShort,
     drawTone: drawTone,
     playTone: playTone,
+    playClip: playClip,
+    stopAudio: stopAudio,
     drawLocator: drawLocator
   };
 })();

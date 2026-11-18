@@ -234,8 +234,8 @@
 
       var ARMS = {
         Arm1: { name: "第一组　普通话图文组（对照组）", desc: "只看普通话写的器物简介。不提供潮汕读音、声调图和地点。" },
-        Arm2: { name: "第二组　方言读音组", desc: "只看词语的潮拼、国际音标，可以听声调示意音。不提供做法说明、俗称辨误和地点。" },
-        Arm3: { name: "第三组　完整词条组", desc: "看到完整词条：俗称辨误、潮拼与国际音标、声调图与示意音、音韵与做法说明、所在地点。" }
+        Arm2: { name: "第二组　方言读音组", desc: "只看词语的潮拼与国际音标，可以听读音与声调合成示范。不提供做法说明、俗称辨误和地点。" },
+        Arm3: { name: "第三组　完整词条组", desc: "看到完整词条：俗称辨误、潮拼与国际音标、声调图与合成音频、音韵与做法说明、所在地点。" }
       };
 
       var QUIZ = [
@@ -270,6 +270,7 @@
       }
 
       function setArm(k) {
+        CY.stopAudio();
         currentArm = k;
         $("arm-name").textContent = ARMS[k].name;
         $("arm-desc").textContent = ARMS[k].desc;
@@ -298,15 +299,17 @@
           el.className = "stim-item";
           var h = '<div class="k">' + CY.cnNum(i + 1) + "　" + CY.catShort(it.category) + '</div><div class="w">' + CY.esc(it.orthography) + "</div>";
           var pron = '<div class="pron"><span class="pengim">' + CY.esc(it.pengim_shantou) + '</span><span class="ipa">' + CY.esc(it.ipa_shantou) + "</span></div>";
-          var play = '<button class="textbtn" data-id="' + it.id + '">▶ 听声调</button>';
+          var playPron = '<button class="textbtn" type="button" data-id="' + it.id + '" data-kind="hj" data-stop-label="■ 停止">▶ 听读音示范</button>';
+          var playBoth = '<div class="listen" style="margin-top:6px">' + playPron +
+            '<button class="textbtn quiet" type="button" data-id="' + it.id + '" data-kind="guide" data-stop-label="■ 停止解说">▶ 听词条解说</button></div>';
           if (currentArm === "Arm1") {
             h += "<p>" + CY.esc(it.artifact_desc) + "</p>";
             h += '<div class="masked">本组不提供读音、声调图和地点</div>';
           } else if (currentArm === "Arm2") {
-            h += pron + play;
+            h += pron + playPron;
             h += '<div class="masked">本组不提供做法说明、俗称辨误和地点</div>';
           } else {
-            h += pron + '<svg data-tone="' + it.id + '"></svg>' + play;
+            h += pron + '<svg data-tone="' + it.id + '"></svg>' + playBoth;
             h += "<p><b>俗称</b>" + CY.esc(it.folk_alias) + "</p>";
             h += "<p><b>音韵</b>" + CY.esc(it.haojiang_accent_note) + "</p>";
             h += "<p><b>做法</b>" + CY.esc(it.artifact_desc) + "</p>";
@@ -320,8 +323,11 @@
         Array.prototype.forEach.call(box.querySelectorAll("button[data-id]"), function (b) {
           b.addEventListener("click", function () {
             var it = seeds.find(function (s) { return s.id === b.dataset.id; });
+            var kind = b.dataset.kind || "hj";
+            var card = b.closest ? b.closest(".stim-item") : b.parentNode;
+            var svg = kind === "hj" && card ? card.querySelector("svg[data-tone]") : null;
             audioClicks++;
-            CY.playTone(b.parentNode.querySelector("svg[data-tone]"), it.f0_contour_haojiang, 170, "#a8321d");
+            CY.playClip({ kind: kind, item: it, svg: svg, seq: it.f0_contour_haojiang, baseHz: 192, color: "#a8321d", btn: b });
           });
         });
       }

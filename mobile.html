@@ -76,13 +76,14 @@
         <span class="ipa" id="e-ipa"></span>
       </div>
       <div class="listen">
-        <button class="textbtn" id="play-hj">▶ 听声调　濠江口音</button>
-        <button class="textbtn quiet" id="play-st">▶ 汕头市区口音</button>
+        <button class="textbtn" id="play-guide" type="button" data-stop-label="■ 停止解说">▶ 听词条解说</button>
+        <button class="textbtn" id="play-hj" type="button" data-stop-label="■ 停止">▶ 濠江读音</button>
+        <button class="textbtn quiet" id="play-st" type="button" data-stop-label="■ 停止">▶ 市区读音</button>
       </div>
 
       <figure class="tone-fig">
         <svg id="tone" role="img" aria-label="声调走势图"></svg>
-        <figcaption>声调走势（五度标调）。朱色为濠江口音，灰色为市区口音。示意音按走势合成，并非真人录音。</figcaption>
+        <figcaption>声调走势（五度标调）。朱色为濠江口音，灰色为市区口音。词条解说与读音示范均为合成音频，并非田野真人录音。</figcaption>
       </figure>
 
       <hr class="hair" />
@@ -130,6 +131,7 @@
       var cur = items.find(function (x) { return x.id === new URLSearchParams(location.search).get("id"); }) || items[0];
 
       function go(it) {
+        CY.stopAudio();
         cur = it;
         var url = new URL(location.href);
         url.searchParams.set("id", it.id);
@@ -187,8 +189,15 @@
         document.title = it.orthography + " · 潮音博物";
       }
 
-      $("play-hj").addEventListener("click", function () { CY.playTone($("tone"), cur.f0_contour_haojiang, 170, "#a8321d"); });
-      $("play-st").addEventListener("click", function () { CY.playTone($("tone"), cur.f0_contour_shantou, 180, "#8a857a"); });
+      $("play-guide").addEventListener("click", function () {
+        CY.playClip({ kind: "guide", item: cur, btn: $("play-guide") });
+      });
+      $("play-hj").addEventListener("click", function () {
+        CY.playClip({ kind: "hj", item: cur, svg: $("tone"), seq: cur.f0_contour_haojiang, baseHz: 192, color: "#a8321d", btn: $("play-hj") });
+      });
+      $("play-st").addEventListener("click", function () {
+        CY.playClip({ kind: "st", item: cur, svg: $("tone"), seq: cur.f0_contour_shantou, baseHz: 192, color: "#8a857a", btn: $("play-st") });
+      });
 
       render();
     })();

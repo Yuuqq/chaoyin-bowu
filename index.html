@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>潮音博物 · 汕头濠江方言风物录</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap"
+    media="print" onload="this.media='all'" />
   <link rel="stylesheet" href="./theme.css" />
   <style>
     .book {
@@ -25,7 +27,11 @@
       padding-right: 6px;
       scrollbar-width: thin;
     }
-    .idx-details > summary { display: none; }
+
+    .idx-details>summary {
+      display: none;
+    }
+
     .lookup {
       width: 100%;
       margin-top: 10px;
@@ -38,7 +44,11 @@
       font-size: 15px;
       outline: none;
     }
-    .lookup::placeholder { color: var(--ink-3); }
+
+    .lookup::placeholder {
+      color: var(--ink-3);
+    }
+
     .lookup-msg {
       font-family: var(--sans);
       font-size: 12.5px;
@@ -46,8 +56,15 @@
       color: var(--ink-3);
       margin-top: 8px;
     }
-    .lookup-msg:empty { display: none; }
-    .lookup-msg.miss { color: var(--red); }
+
+    .lookup-msg:empty {
+      display: none;
+    }
+
+    .lookup-msg.miss {
+      color: var(--red);
+    }
+
     .idx-mode {
       display: flex;
       gap: 14px;
@@ -55,6 +72,7 @@
       font-family: var(--sans);
       font-size: 13px;
     }
+
     .idx-mode button {
       background: none;
       border: 0;
@@ -63,7 +81,12 @@
       color: var(--ink-3);
       border-bottom: 1px solid transparent;
     }
-    .idx-mode button.on { color: var(--ink); border-bottom-color: var(--ink); }
+
+    .idx-mode button.on {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
     .idx-group h3 {
       margin: 22px 0 4px;
       padding-bottom: 5px;
@@ -74,6 +97,7 @@
       letter-spacing: 0.12em;
       color: var(--ink-3);
     }
+
     .idx-item {
       display: flex;
       align-items: baseline;
@@ -82,22 +106,50 @@
       font-size: 15px;
       color: var(--ink-2);
     }
-    .idx-item .w { white-space: nowrap; }
+
+    .idx-item .w {
+      white-space: nowrap;
+    }
+
     .idx-item .lead {
       flex: 1;
       min-width: 12px;
       border-bottom: 1px dotted rgba(22, 20, 15, 0.3);
       transform: translateY(-4px);
     }
-    .idx-item .n { font-family: var(--latin); font-size: 13px; color: var(--ink-3); }
-    .idx-item:hover { color: var(--ink); }
-    .idx-item.on, .idx-item.on .n { color: var(--red); }
 
-    .entry { max-width: 660px; min-width: 0; }
-    .margin { position: sticky; top: 22px; padding-top: 4px; }
+    .idx-item .n {
+      font-family: var(--latin);
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .idx-item:hover {
+      color: var(--ink);
+    }
+
+    .idx-item.on,
+    .idx-item.on .n {
+      color: var(--red);
+    }
+
+    .entry {
+      max-width: 660px;
+      min-width: 0;
+    }
+
+    .margin {
+      position: sticky;
+      top: 22px;
+      padding-top: 4px;
+    }
 
     @media (max-width: 1100px) {
-      .book { grid-template-columns: 190px minmax(0, 1fr); gap: 0 44px; }
+      .book {
+        grid-template-columns: 190px minmax(0, 1fr);
+        gap: 0 44px;
+      }
+
       .margin {
         position: static;
         grid-column: 2;
@@ -109,8 +161,13 @@
         gap: 0 36px;
       }
     }
+
     @media (max-width: 760px) {
-      .book { grid-template-columns: 1fr; margin-top: 18px; }
+      .book {
+        grid-template-columns: 1fr;
+        margin-top: 18px;
+      }
+
       .index {
         position: static;
         max-height: none;
@@ -119,7 +176,8 @@
         padding: 0 0 8px;
         margin-bottom: 26px;
       }
-      .idx-details > summary {
+
+      .idx-details>summary {
         display: flex;
         justify-content: space-between;
         cursor: pointer;
@@ -128,11 +186,19 @@
         font-size: 14px;
         padding: 6px 0;
       }
-      .idx-details > summary::-webkit-details-marker { display: none; }
-      .margin { grid-column: 1; grid-template-columns: 1fr; }
+
+      .idx-details>summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .margin {
+        grid-column: 1;
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -175,8 +241,9 @@
           <span class="ipa" id="e-ipa"></span>
         </div>
         <div class="listen">
-          <button class="textbtn" id="play-hj">▶ 听声调　濠江口音</button>
-          <button class="textbtn quiet" id="play-st">▶ 听声调　汕头市区口音</button>
+          <button class="textbtn" id="play-guide" type="button" data-stop-label="■ 停止解说">▶ 听词条解说</button>
+          <button class="textbtn" id="play-hj" type="button" data-stop-label="■ 停止">▶ 读音与声调 · 濠江</button>
+          <button class="textbtn quiet" id="play-st" type="button" data-stop-label="■ 停止">▶ 读音与声调 · 市区</button>
         </div>
 
         <hr class="hair" />
@@ -186,7 +253,7 @@
 
         <figure class="tone-fig">
           <svg id="tone" role="img" aria-label="声调走势图"></svg>
-          <figcaption>声调走势，按五度标调法绘制，纵轴一度最低、五度最高。朱色实线为濠江口音，灰色虚线为汕头市区口音。“听声调”播放的是按这条走势合成的示意音，并非真人录音。</figcaption>
+          <figcaption>声调走势，按五度标调法绘制，纵轴一度最低、五度最高。朱色实线为濠江口音，灰色虚线为汕头市区口音。词条解说为合成语音，两处读音按国际音标与五度走势合成，均非田野真人录音。</figcaption>
         </figure>
 
         <p class="note"><span class="note-mark">注</span><span id="e-trap"></span></p>
@@ -335,6 +402,7 @@
 
       function select(it) {
         if (!it) return;
+        CY.stopAudio();
         cur = it;
         var url = new URL(location.href);
         url.searchParams.set("id", it.id);
@@ -343,8 +411,15 @@
         renderEntry(it);
       }
 
-      $("play-hj").addEventListener("click", function () { CY.playTone($("tone"), cur.f0_contour_haojiang, 170, "#a8321d"); });
-      $("play-st").addEventListener("click", function () { CY.playTone($("tone"), cur.f0_contour_shantou, 180, "#8a857a"); });
+      $("play-guide").addEventListener("click", function () {
+        CY.playClip({ kind: "guide", item: cur, btn: $("play-guide") });
+      });
+      $("play-hj").addEventListener("click", function () {
+        CY.playClip({ kind: "hj", item: cur, svg: $("tone"), seq: cur.f0_contour_haojiang, baseHz: 192, color: "#a8321d", btn: $("play-hj") });
+      });
+      $("play-st").addEventListener("click", function () {
+        CY.playClip({ kind: "st", item: cur, svg: $("tone"), seq: cur.f0_contour_shantou, baseHz: 192, color: "#8a857a", btn: $("play-st") });
+      });
 
       Array.prototype.forEach.call(document.querySelectorAll(".idx-mode button"), function (b) {
         b.addEventListener("click", function () {
@@ -379,4 +454,5 @@
     })();
   </script>
 </body>
+
 </html>

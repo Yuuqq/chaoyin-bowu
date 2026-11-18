@@ -132,6 +132,11 @@ button, input, select { font: inherit; color: inherit; }
 .textbtn:hover { border-bottom-color: var(--red); }
 .textbtn.quiet { color: var(--ink-2); border-bottom-color: var(--hair); }
 .textbtn.quiet:hover { color: var(--ink); border-bottom-color: var(--ink); }
+.textbtn.playing {
+  color: var(--red);
+  font-weight: 600;
+  border-bottom-color: var(--red);
+}
 
 .mono { font-family: var(--latin); letter-spacing: 0.03em; }
 
