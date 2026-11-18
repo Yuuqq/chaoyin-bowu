@@ -3,800 +3,380 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>潮音博物 · 濠江青少年三臂随机对照现场实验施测终端</title>
+  <title>课堂对照实验施测页 · 潮音博物</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" media="print" onload="this.media='all'" />
   <link rel="stylesheet" href="./theme.css" />
   <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 16px 20px 36px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .summary-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-    .kpi-tile {
-      background: var(--surface-card);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 12px 14px;
-      box-shadow: var(--shadow-card);
-    }
-    .kpi-tile .k-eyebrow {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--ink-muted);
-      margin-bottom: 4px;
-      display: block;
-    }
-    .kpi-tile .k-val {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--celadon-900);
-      font-variant-numeric: tabular-nums;
-    }
-    .kpi-tile .k-sub {
-      font-size: 11px;
-      color: var(--ink-secondary);
-      margin-top: 3px;
-    }
-
-    .step-card {
-      padding: 18px 20px;
-    }
-
-    .step-num-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--celadon-700);
-      color: #ffffff;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      font-weight: 700;
-      margin-right: 8px;
-      flex-shrink: 0;
-    }
-
-    .enroll-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1.3fr auto;
-      gap: 12px;
-      align-items: end;
-    }
-    label.fld {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .form { max-width: 820px; margin: 44px auto 0; }
+    .form h1 { margin: 0; font-size: clamp(28px, 4vw, 38px); font-weight: 700; letter-spacing: 0.05em; line-height: 1.3; }
+    .form .status {
+      display: inline-block;
+      margin-top: 10px;
+      font-family: var(--sans);
       font-size: 12px;
-      font-weight: 600;
-      color: var(--ink-secondary);
+      color: var(--red);
+      border: 1px solid var(--red);
+      padding: 0 6px;
+      letter-spacing: 0.08em;
     }
-    .ctrl-input {
-      padding: 9px 11px;
-      border: 1px solid var(--border-strong);
-      border-radius: var(--r-sm);
-      background: var(--surface-subtle);
-      color: var(--ink-primary);
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .ctrl-input:focus {
-      background: #ffffff;
-      border-color: var(--celadon-700);
-      box-shadow: 0 0 0 3px rgba(15, 82, 90, 0.10);
-    }
+    .lede { font-size: 16px; line-height: 1.95; text-align: justify; color: var(--ink-2); margin: 18px 0 0; }
 
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      border: none;
-      background: var(--celadon-700);
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: var(--r-pill);
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 2px 8px rgba(15, 82, 90, 0.20);
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-primary:hover {
-      background: var(--celadon-900);
-    }
-    .btn-primary:active {
-      transform: scale(0.98);
-    }
-    .btn-amber {
-      background: var(--amber-600);
-      box-shadow: 0 2px 8px rgba(192, 95, 29, 0.20);
-    }
-    .btn-amber:hover {
-      background: var(--amber-700);
-    }
-
-    .arm-banner {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: var(--r-md);
-      background: var(--celadon-50);
-      border: 1px solid rgba(15, 82, 90, 0.18);
+    .sec { margin-top: 48px; }
+    .sec-head {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: baseline;
+      gap: 12px;
       flex-wrap: wrap;
-      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--rule);
     }
-    .arm-info {
-      font-size: 12.5px;
-      line-height: 1.5;
-      color: var(--ink-primary);
-    }
-    .arm-info strong {
-      color: var(--celadon-900);
-    }
-    .arm-switch {
-      display: inline-flex;
-      align-items: center;
-      background: #ffffff;
-      border: 1px solid var(--border-hairline);
-      padding: 3px;
-      border-radius: var(--r-pill);
-      gap: 2px;
-    }
-    .arm-btn {
-      border: none;
+    .sec-head h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.06em; }
+    .sec-head .aside { font-family: var(--sans); font-size: 12.5px; color: var(--ink-3); }
+
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 32px; margin-top: 20px; }
+    .fields .wide { grid-column: 1 / -1; }
+    .fld { display: flex; flex-direction: column; gap: 4px; }
+    .fld span { font-family: var(--sans); font-size: 12.5px; color: var(--ink-3); letter-spacing: 0.06em; }
+    .fld input, .fld select {
+      border: 0;
+      border-bottom: 1px solid var(--rule);
+      border-radius: 0;
       background: transparent;
-      color: var(--ink-secondary);
-      padding: 5px 11px;
-      border-radius: var(--r-pill);
-      font-size: 11.5px;
-      font-weight: 600;
+      padding: 6px 0;
+      font-size: 15.5px;
+      outline: none;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .fld select {
+      background-image: linear-gradient(45deg, transparent 50%, #48443c 50%), linear-gradient(135deg, #48443c 50%, transparent 50%);
+      background-position: calc(100% - 10px) 55%, calc(100% - 5px) 55%;
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+      padding-right: 22px;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+      padding: 8px 22px;
       cursor: pointer;
-      transition: all 0.15s;
+      font-family: var(--sans);
+      font-size: 14px;
+      letter-spacing: 0.06em;
     }
-    .arm-btn.active {
-      background: var(--amber-600);
-      color: #ffffff;
-    }
+    .btn:hover { background: var(--red); border-color: var(--red); }
+    .btn.ghost { background: transparent; color: var(--ink); }
+    .btn.ghost:hover { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+    .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 22px; }
 
-    .stim-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .stim-card {
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 14px;
-      background: var(--surface-subtle);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .stim-card:hover {
-      background: #ffffff;
-      border-color: rgba(15, 82, 90, 0.22);
-    }
-    .stim-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 6px;
-    }
-    .stim-title {
-      font-family: var(--font-serif);
-      font-size: 16.5px;
-      font-weight: 700;
-      color: var(--celadon-900);
-    }
-    .phon-strip {
-      background: #ffffff;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-sm);
-      padding: 7px 9px;
-      font-size: 12px;
-      line-height: 1.55;
-      color: var(--celadon-900);
-    }
-    .synth-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 6px 12px;
-      font-size: 11.5px;
-      font-weight: 600;
-      background: var(--celadon-700);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--r-pill);
+    .assign { margin-top: 22px; padding: 14px 0; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+    .assign .who { font-size: 17px; font-weight: 700; }
+    .assign .who .g { color: var(--red); }
+    .assign .what { font-size: 14.5px; color: var(--ink-2); line-height: 1.8; margin-top: 4px; }
+    .preview { margin-top: 10px; font-family: var(--sans); font-size: 13px; color: var(--ink-3); display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .preview button {
+      background: none;
+      border: 0;
+      padding: 0 0 2px;
       cursor: pointer;
-      align-self: flex-start;
-      transition: background 0.15s;
+      color: var(--ink-2);
+      border-bottom: 1px solid transparent;
     }
-    .synth-btn:hover {
-      background: var(--celadon-900);
-    }
-    .mask-note {
-      font-size: 11px;
-      color: var(--ink-muted);
-      background: var(--surface-sand);
-      padding: 5px 8px;
-      border-radius: var(--r-sm);
-      margin-top: auto;
-    }
+    .preview button.on { color: var(--ink); border-bottom-color: var(--ink); }
 
-    /* Quiz cards */
-    .quiz-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .quiz-item {
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 13px 15px;
-      background: var(--surface-subtle);
-    }
-    .quiz-item.graded-ok {
-      border-color: var(--ok-border);
-      background: var(--ok-bg);
-    }
-    .quiz-item.graded-err {
-      border-color: var(--err-border);
-      background: var(--err-bg);
-    }
-    .quiz-q {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--ink-primary);
-      margin-bottom: 9px;
-      line-height: 1.5;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px;
-    }
-    .q-badge {
-      font-size: 10.5px;
-      font-weight: 600;
-      color: var(--celadon-700);
-      background: var(--celadon-100);
-      padding: 2px 8px;
-      border-radius: var(--r-pill);
-      white-space: nowrap;
-    }
-    .quiz-opts {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-    .opt-lbl {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
-      padding: 8px 11px;
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-sm);
-      background: #ffffff;
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .opt-lbl:hover {
-      border-color: var(--celadon-700);
-    }
-    .opt-lbl input {
-      accent-color: var(--celadon-700);
-      cursor: pointer;
-    }
+    .stim { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; }
+    .stim-item { padding: 20px 0; border-bottom: 1px solid var(--hair); }
+    .stim-item .k { font-family: var(--sans); font-size: 12px; color: var(--ink-3); letter-spacing: 0.1em; }
+    .stim-item .w { font-size: 24px; font-weight: 700; letter-spacing: 0.04em; margin: 2px 0 6px; line-height: 1.3; }
+    .stim-item .pron { gap: 2px 16px; margin-bottom: 6px; }
+    .stim-item .pengim { font-size: 17px; }
+    .stim-item .ipa { font-size: 14px; }
+    .stim-item svg { display: block; width: 100%; height: auto; margin: 6px 0 4px; }
+    .stim-item p { margin: 6px 0 0; font-size: 14.5px; line-height: 1.85; color: var(--ink-2); text-align: justify; }
+    .stim-item p b { color: var(--ink); margin-right: 0.6em; }
+    .stim-item .masked { font-family: var(--sans); font-size: 12px; color: var(--ink-3); margin-top: 8px; }
 
-    .result-box {
-      margin-top: 14px;
-      padding: 15px 18px;
-      border-radius: var(--r-md);
-      background: var(--ok-bg);
-      border: 1px solid var(--ok-border);
-      display: none;
+    .quiz { list-style: none; margin: 0; padding: 0; counter-reset: q; }
+    .q { padding: 20px 0 18px 40px; border-bottom: 1px solid var(--hair); position: relative; }
+    .q::before {
+      counter-increment: q;
+      content: counter(q);
+      position: absolute;
+      left: 0;
+      top: 18px;
+      font-family: var(--latin);
+      font-size: 22px;
+      color: var(--ink-3);
     }
-    .res-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .res-score {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--ok-700);
-    }
+    .q .tag { font-family: var(--sans); font-size: 12px; color: var(--ink-3); letter-spacing: 0.1em; }
+    .q .stem { font-size: 16px; line-height: 1.85; margin: 2px 0 10px; }
+    .q .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 28px; }
+    .q label { display: flex; gap: 8px; align-items: baseline; font-size: 15px; line-height: 1.7; cursor: pointer; color: var(--ink-2); }
+    .q label:hover { color: var(--ink); }
+    .q input { accent-color: var(--ink); transform: translateY(1px); }
+    .q .mark { position: absolute; right: 0; top: 20px; font-family: var(--sans); font-size: 13px; }
+    .q.ok .mark { color: var(--ink-2); }
+    .q.bad .mark { color: var(--red); }
+    .q.bad::before { color: var(--red); }
 
-    @media (max-width: 960px) {
-      .summary-strip { grid-template-columns: 1fr 1fr; }
-      .enroll-grid, .stim-grid, .quiz-opts { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 560px) {
-      .summary-strip { grid-template-columns: 1fr; }
+    .result { margin-top: 24px; display: none; }
+    .result .score { font-size: 22px; font-weight: 700; }
+    .result p { font-size: 14.5px; line-height: 1.9; color: var(--ink-2); margin: 6px 0 0; }
+    .result code { font-family: Consolas, monospace; font-size: 13px; }
+
+    @media (max-width: 760px) {
+      .fields, .stim, .q .opts { grid-template-columns: 1fr; }
+      .q { padding-left: 30px; }
     }
   </style>
 </head>
 <body>
-  <header class="app-bar">
-    <a class="brand-lockup" href="index.html">
-      <div class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="4" stroke="#F5E6C8" stroke-width="1.6"/>
-          <path d="M6.5 14C8.5 14 9 8.5 11.5 8.5C14 8.5 13.5 15.5 16 15.5C17.2 15.5 17.8 13 18.2 11.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
+  <div class="wrap">
+    <header>
+      <div class="masthead">
+        <a class="wordmark" href="index.html">
+          <span class="seal" aria-hidden="true">潮音</span>
+          <span class="wm-text">
+            <span class="wm-title">潮音博物</span>
+            <span class="wm-sub">汕头濠江方言风物录</span>
+          </span>
+        </a>
+        <nav class="topnav">
+          <span class="crumb">研究工具</span>
+          <a href="index.html">词目</a>
+          <a href="about.html">关于本项目</a>
+        </nav>
       </div>
-      <div class="brand-text">
-        <div class="brand-title-row">
-          <span class="brand-name">潮音博物</span>
-          <span class="version-chip">三臂对照施测台</span>
+      <div class="rules"></div>
+    </header>
+
+    <main class="form">
+      <h1>课堂对照实验施测页</h1>
+      <span class="status">样例　尚未正式施测</span>
+      <p class="lede">本页为立项后在濠江中小学开展的对照实验准备。学生按学段和家里说潮汕话的多少分层后，随机分入三组，分别学习同样六个词的不同材料，学完立即作答八道题，七天后再答一次同构试题，用来比较哪种材料记得更牢。页面只记录匿名编号，不收集姓名和学号。</p>
+
+      <section class="sec">
+        <div class="sec-head"><h2>一　登记与分组</h2><span class="aside">按学段与家庭语言环境分层，随机分入三组</span></div>
+        <div class="fields">
+          <label class="fld">
+            <span>匿名编号</span>
+            <input id="subj-id" type="text" value="HJ-RCT-018" />
+          </label>
+          <label class="fld">
+            <span>学段</span>
+            <select id="grade-band">
+              <option value="G5_6">小学五至六年级</option>
+              <option value="G7_9" selected>初中七至九年级</option>
+            </select>
+          </label>
+          <label class="fld wide">
+            <span>家里说潮汕话的情况</span>
+            <select id="home-exp">
+              <option value="LOW">很少：家里基本说普通话，只听得懂零星几句</option>
+              <option value="MID" selected>一般：长辈说潮汕话能听懂，自己较少开口</option>
+              <option value="HIGH">经常：家里日常就用潮汕话交流</option>
+            </select>
+          </label>
         </div>
-        <div class="brand-sub">分层区组 1:1:1 随机分流 · 协方差暴露度控制 · 匿名 CSV 遥测导出</div>
-      </div>
-    </a>
+        <div class="row"><button class="btn" id="btn-assign">随机分组</button></div>
 
-    <nav class="nav-segmented" aria-label="主功能切换">
-      <a class="nav-tab" href="index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="13" y1="9" x2="18" y2="9"/><line x1="13" y1="13" x2="18" y2="13"/></svg>
-        风物图鉴与声学台
-      </a>
-      <a class="nav-tab" href="graph.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M10.5 7.2L6.4 15.8M13.5 7.2L17.6 15.8M7.5 18H16.5"/></svg>
-        知识图谱漫游
-      </a>
-      <a class="nav-tab active" href="experiment.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v5.5L5.2 17.8A2 2 0 0 0 7 20.5h10a2 2 0 0 0 1.8-2.7L14 8.5V3"/></svg>
-        三臂对照实验
-      </a>
-      <a class="nav-tab" href="mobile.html?id=CY-AF-001">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2.5" width="10" height="19" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-        手机扫码 H5
-      </a>
-    </nav>
-
-    <div class="header-metrics">
-      <div class="stat-chip tnum"><span class="stat-dot"></span><strong>1:1:1</strong> 三臂随机化</div>
-    </div>
-  </header>
-
-  <div class="container">
-    <!-- Prior Benchmark & Power Summary Strip (from seed_data.js verifiedFacts) -->
-    <section class="summary-strip" id="exp-kpis">
-      <div class="kpi-tile">
-        <span class="k-eyebrow">双模型 API 实测（N=42 题 / 168 次）</span>
-        <div class="k-val tnum">31.0% → 96.4%</div>
-        <div class="k-sub">综合严格准确率（潮拼转写达 100.0%）</div>
-      </div>
-      <div class="kpi-tile">
-        <span class="k-eyebrow">受控图谱防幻觉效果</span>
-        <div class="k-val tnum">69.0% → 3.6%</div>
-        <div class="k-sub">综合差错率骤降 · 安慰剂拒答 100.0%</div>
-      </div>
-      <div class="kpi-tile">
-        <span class="k-eyebrow">2,000 次蒙特卡洛统计检验力</span>
-        <div class="k-val tnum">98.8%</div>
-        <div class="k-sub">基准 N=180 下 Arm 3 对比 Arm 2 检验力</div>
-      </div>
-      <div class="kpi-tile">
-        <span class="k-eyebrow">高流失压力复测下稳健性</span>
-        <div class="k-val tnum">96.1%</div>
-        <div class="k-sub">按 25% 7日复测流失折算仍显著优于 80% 线</div>
-      </div>
-    </section>
-
-    <!-- Step 1: Stratified Block Randomization -->
-    <section class="surface-card step-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:center;">
-          <span class="step-num-pill">1</span>
-          <div>
-            <span class="eyebrow">Stratified Block Randomization</span>
-            <h2 class="card-title">匿名受试者基线登记与分层区组随机分流</h2>
+        <div class="assign">
+          <div class="who">分入：<span class="g" id="arm-name"></span></div>
+          <div class="what" id="arm-desc"></div>
+          <div class="preview">预览各组材料
+            <button data-arm="Arm1">第一组</button>
+            <button data-arm="Arm2">第二组</button>
+            <button data-arm="Arm3">第三组</button>
           </div>
         </div>
-        <span class="card-meta-pill tnum">目标招募 N=160–240 · 基准 N=180</span>
-      </div>
+      </section>
 
-      <div class="enroll-grid">
-        <label class="fld">
-          匿名受试编号（不含姓名学号）
-          <input class="ctrl-input" type="text" id="subj-id" value="HJ-RCT-018" />
-        </label>
-        <label class="fld">
-          学段分层（Grade Stratum）
-          <select class="ctrl-input" id="grade-band">
-            <option value="G5_6">小学高年级（5–6 年级）</option>
-            <option value="G7_9" selected>初中阶段（7–9 年级）</option>
-          </select>
-        </label>
-        <label class="fld">
-          家庭日常潮语暴露度协变量（Z_exposure）
-          <select class="ctrl-input" id="home-exp">
-            <option value="LOW">低度暴露（日常全说普通话，仅听懂零星潮语）</option>
-            <option value="MID" selected>中度暴露（长辈说潮语能听懂，较少主动开口）</option>
-            <option value="HIGH">高度暴露（家庭日常以潮汕话双向交流为主）</option>
-          </select>
-        </label>
-        <button class="btn-primary" id="btn-assign">执行分层区组随机分配</button>
-      </div>
+      <section class="sec">
+        <div class="sec-head"><h2>二　学习材料</h2><span class="aside" id="telemetry"></span></div>
+        <div class="stim" id="stim"></div>
+      </section>
 
-      <div class="arm-banner" id="arm-banner">
-        <div class="arm-info">
-          当前分配实验臂：<strong id="arm-name">Arm 3 · “潮音博物”多模态交互组</strong>
-          <span id="arm-desc" style="color:var(--ink-secondary);margin-left:6px;">（全量呈现正字溯源 + 1960 潮拼/IPA + 濠江/汕头双腔基频曲线 + F₀ 声调合成试听 + 古村空间锚点）</span>
+      <section class="sec">
+        <div class="sec-head"><h2>三　测验</h2><span class="aside">共八题，即时测验与七天后复测使用同构试题</span></div>
+        <ol class="quiz" id="quiz"></ol>
+        <div class="row">
+          <button class="btn" id="btn-submit">交卷</button>
+          <button class="btn ghost" id="btn-csv" style="display:none;">下载本次记录（CSV）</button>
         </div>
-        <div class="arm-switch" role="group" aria-label="实验臂预览切换">
-          <button class="arm-btn" data-arm="Arm1">Arm 1 普通话图文</button>
-          <button class="arm-btn" data-arm="Arm2">Arm 2 纯音频词表</button>
-          <button class="arm-btn active" data-arm="Arm3">Arm 3 潮音多模态</button>
-        </div>
-      </div>
-    </section>
+        <div class="result" id="result"></div>
+      </section>
+    </main>
 
-    <!-- Step 2: Controlled Stimulus Cards -->
-    <section class="surface-card step-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:center;">
-          <span class="step-num-pill">2</span>
-          <div>
-            <span class="eyebrow">Controlled Stimuli</span>
-            <h2 class="card-title">受控刺激材料学习舱（6 项濠江跨门类核心名物）</h2>
-          </div>
-        </div>
-        <span class="card-meta-pill tnum" id="telemetry-lbl">F₀ 合成试听 0 次 · 驻留 0 秒</span>
+    <footer class="colophon">
+      <div class="colophon-inner">
+        <span>汕头大学“潮音博物”课题组　·　研究工具</span>
+        <span class="links">
+          <a href="index.html">词目</a>
+          <a href="graph.html">知识图谱</a>
+          <a href="about.html">关于本项目</a>
+        </span>
       </div>
-      <div class="stim-grid" id="stim-grid"></div>
-    </section>
-
-    <!-- Step 3: Standardized 8-Item Post-Test & CSV Logger -->
-    <section class="surface-card step-card">
-      <div class="card-header">
-        <div style="display:flex;align-items:center;">
-          <span class="step-num-pill">3</span>
-          <div>
-            <span class="eyebrow">Objective Assessment & Export</span>
-            <h2 class="card-title">标准化客观后测卷（即时测验与 7 日延迟保持测验同构题库 · 共 8 题）</h2>
-          </div>
-        </div>
-        <span class="card-meta-pill">正字辨误 · 声调辨识 · 器物生计 · 拒答辨识</span>
-      </div>
-
-      <div class="quiz-list" id="quiz-list"></div>
-
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-        <button class="btn-primary" id="btn-submit">提交后测卷并生成匿名实验记录</button>
-        <button class="btn-primary btn-amber" id="btn-csv" style="display:none;">⬇ 导出匿名 CSV 实验数据行（供 ANCOVA 脚本读取）</button>
-      </div>
-      <div class="result-box" id="result-box"></div>
-    </section>
+    </footer>
   </div>
 
   <script src="seed_data.js"></script>
+  <script src="app.js"></script>
   <script>
     (function () {
-      const data = window.CHAOYIN_DATA || { seedItems: [] };
-      const seeds = data.seedItems || [];
-      const targetIds = ["CY-AF-001", "CY-AF-002", "CY-CR-001", "CY-CR-005", "CY-PR-002", "CY-PR-006"];
-      const stimItems = targetIds.map(id => seeds.find(s => s.id === id)).filter(Boolean);
+      var CY = window.CY, seeds = CY.items;
+      var $ = function (id) { return document.getElementById(id); };
+      var targetIds = ["CY-AF-001", "CY-AF-002", "CY-CR-001", "CY-CR-005", "CY-PR-002", "CY-PR-006"];
+      var stimItems = targetIds.map(function (id) { return seeds.find(function (s) { return s.id === id; }); }).filter(Boolean);
 
-      const bench = data.verifiedFacts && data.verifiedFacts.pilot_rag_benchmark;
-      const rct = data.verifiedFacts && data.verifiedFacts.rct_power_simulation;
-      if (bench && rct) {
-        const tiles = document.querySelectorAll("#exp-kpis .kpi-tile");
-        tiles[0].querySelector(".k-val").textContent = `${bench.pooled_zero_shot_strict_acc_pct.toFixed(1)}% → ${bench.pooled_rag_strict_acc_pct.toFixed(1)}%`;
-        tiles[1].querySelector(".k-val").textContent = `${bench.pooled_zero_shot_halluc_pct.toFixed(1)}% → ${bench.pooled_rag_halluc_pct.toFixed(1)}%`;
-        tiles[2].querySelector(".k-val").textContent = `${rct.target_power_arm3_vs_arm2_pct.toFixed(1)}%`;
-        tiles[3].querySelector(".k-val").textContent = `${rct.harsh_25pct_attrition_h3b_power_pct.toFixed(1)}%`;
-      }
-
-      const ARM_META = {
-        Arm1: {
-          title: "Arm 1 · 普通话标准图文展板组（对照组）",
-          desc: "（仅呈现普通话释义与器物简介，屏蔽 1960 潮拼、国际音标、基频轨迹、合成试听及村落空间坐标）"
-        },
-        Arm2: {
-          title: "Arm 2 · 纯方言音频词表组（单模态组）",
-          desc: "（呈现词头 + 1960 潮拼/IPA + F₀ 声调包络合成试听，屏蔽器物生计解释、正字纠偏与古村空间坐标）"
-        },
-        Arm3: {
-          title: "Arm 3 · “潮音博物”多模态交互组（核心实验组）",
-          desc: "（全量呈现正字溯源 + 1960 潮拼/IPA + 濠江/汕头双腔基频曲线 + F₀ 声调包络合成试听 + 古村空间锚点）"
-        }
+      var ARMS = {
+        Arm1: { name: "第一组　普通话图文组（对照组）", desc: "只看普通话写的器物简介。不提供潮汕读音、声调图和地点。" },
+        Arm2: { name: "第二组　方言读音组", desc: "只看词语的潮拼、国际音标，可以听声调示意音。不提供做法说明、俗称辨误和地点。" },
+        Arm3: { name: "第三组　完整词条组", desc: "看到完整词条：俗称辨误、潮拼与国际音标、声调图与示意音、音韵与做法说明、所在地点。" }
       };
 
-      const QUIZ = [
-        {
-          id: "Q1",
-          tag: "熟语本义",
-          q: "海内外潮人社群高频自称熟语“胶己人”（读音 ga¹-gī⁷-nâng⁵）在侨乡互助传统中的真实含义是？",
-          opts: ["A. 橡胶手艺人", "B. 自家人（同乡亲友信任认同）", "C. 远洋船员", "D. 集市商贩"],
-          ans: 1
-        },
-        {
-          id: "Q2",
-          tag: "名物本义",
-          q: "达濠渔港传统名物“鱼饭”（hî⁵-bng¹）在潮汕海洋渔业生计史中的真实做法与含义是？",
-          opts: ["A. 海鱼肉切丁盖浇在白米饭上", "B. 鱼浆混入糯米粉蒸制成的糕饼", "C. 竹篾小篓盛本港海鱼以粗盐猛火煮熟摊凉当主食", "D. 生鱼片佐白粥食用"],
-          ans: 2
-        },
-        {
-          id: "Q3",
-          tag: "动作语素",
-          q: "省级非遗达濠鱼丸技艺中，“拍鱼丸”（phah⁴ hî⁵-uân⁵）的“拍”字准确对应哪一核心工序？",
-          opts: ["A. 置于杉木桶内靠手掌反复摔打鱼浆上千次起胶", "B. 用木槌将鱼肉敲成薄纸状", "C. 为成品鱼丸拍摄记录", "D. 用机器高速旋转切割草鱼肉"],
-          ans: 0
-        },
-        {
-          id: "Q4",
-          tag: "古雅器物专名",
-          q: "在人类非遗潮州工夫茶艺中，地道潮汕方言通常将冲茶小壶称作什么？",
-          opts: ["A. 茶盅（dê⁵-zong¹）", "B. 茶瓶 / 冲罐（dê⁵-pâng⁵ / chong¹-guang³）", "C. 水鼎（zui²-diang²）", "D. 茶瓯（dê⁵-au¹）"],
-          ans: 1
-        },
-        {
-          id: "Q5",
-          tag: "声韵特征",
-          q: "蜈田村传统“木粿印”（bhêk⁸-guê²-ing³）首字声母 bh- [b] 属于潮汕话保留的哪类音韵特征？",
-          opts: ["A. 卷舌擦音声母", "B. 唇齿清擦音声母", "C. 古浊双唇塞音声母", "D. 舌尖边音声母"],
-          ans: 2
-        },
-        {
-          id: "Q6",
-          tag: "生态俗谚",
-          q: "濠江渔谚“讨海人睇流水”（tô²-hai²-nâng⁵ toi³ lâu⁵-zui²）中，“睇”与“流水”分别指什么？",
-          opts: ["A. “睇”指观察，“流水”指海洋潮汐涨落规律", "B. “睇”指记录，“流水”指渔船收支账目", "C. “睇”指聆听，“流水”指山涧溪流声音", "D. “睇”指等待，“流水”指淡水补给"],
-          ans: 0
-        },
-        {
-          id: "Q7",
-          tag: "田野空间锚定",
-          q: "侨批档案与工夫茶器物样本在汕头市濠江区的核心侨乡采集点位于哪一社区？",
-          opts: ["A. 礐石街道红光村", "B. 广澳街道东湖社区（东湖侨村）", "C. 达濠街道青篮街", "D. 马滘街道凤岗古村"],
-          ans: 1
-        },
-        {
-          id: "Q8",
-          tag: "防幻觉辨识",
-          q: "当遇到知识库尚未田野采录核验的陌生器物词（如未收录词“青石双耳滤卤漏斗”）时，严谨的方言治学态度应当是？",
-          opts: ["A. 按普通话读音直接猜测潮州话拼音", "B. 找一个字形相近的成语替代解释", "C. 明确标识“暂未收录实证记录”，绝不凭空捏造拼音与工序", "D. 用谐音字随意编造民间传说"],
-          ans: 2
-        }
+      var QUIZ = [
+        { tag: "熟语本义", q: "海内外潮人常说的“胶己人”（ga¹-gī⁷-nâng⁵），在侨乡互助传统中是什么意思？",
+          opts: ["橡胶手艺人", "自家人，同乡亲友之间的信任认同", "远洋船员", "集市商贩"], ans: 1 },
+        { tag: "名物本义", q: "达濠渔港的“鱼饭”（hî⁵-bng¹）是怎样一种食物？",
+          opts: ["海鱼肉切丁盖在白米饭上", "鱼浆混糯米粉蒸成的糕", "竹篓装本港海鱼，用粗盐水猛火煮熟后放凉当饭吃", "生鱼片配白粥"], ans: 2 },
+        { tag: "动作语素", q: "达濠鱼丸制作中，“拍鱼丸”（phah⁴ hî⁵-uân⁵）的“拍”指的是哪道工序？",
+          opts: ["在杉木桶里用手掌反复摔打鱼浆上千次，直到起胶", "用木槌把鱼肉敲成薄片", "给做好的鱼丸拍照", "用机器高速搅碎草鱼肉"], ans: 0 },
+        { tag: "器物专名", q: "潮州工夫茶里，潮汕话通常把冲茶的小壶叫什么？",
+          opts: ["茶盅（dê⁵-zong¹）", "茶瓶或冲罐（dê⁵-pâng⁵ / chong¹-guang³）", "水鼎（zui²-diang²）", "茶瓯（dê⁵-au¹）"], ans: 1 },
+        { tag: "声母特点", q: "蜈田村“木粿印”（bhêk⁸-guê²-ing³）开头的 bh- [b]，是潮汕话保留的哪类声母？",
+          opts: ["卷舌擦音", "唇齿清擦音", "古浊双唇塞音", "舌尖边音"], ans: 2 },
+        { tag: "生态俗谚", q: "濠江渔谚“讨海人睇流水”（tô²-hai²-nâng⁵ toi³ lâu⁵-zui²）中，“睇”和“流水”分别指什么？",
+          opts: ["“睇”是看，“流水”是海潮涨落的规律", "“睇”是记，“流水”是渔船的账目", "“睇”是听，“流水”是山涧溪水", "“睇”是等，“流水”是淡水补给"], ans: 0 },
+        { tag: "地点", q: "侨批和工夫茶器物的样本，主要采自濠江区哪个社区？",
+          opts: ["礐石街道红光村", "广澳街道东湖社区（东湖侨村）", "达濠街道青篮街", "马滘街道凤岗古村"], ans: 1 },
+        { tag: "求证态度", q: "遇到资料里没有记载的器物名，比如“青石双耳滤卤漏斗”，应当怎么做？",
+          opts: ["按普通话读音推测潮汕读法", "找个字形相近的成语来解释", "说明暂未找到可靠记录，不凭空编造读音和做法", "用谐音字编一个民间传说"], ans: 2 }
       ];
 
-      let currentArm = "Arm3";
-      let audioClicks = 0;
-      let startTs = Date.now();
-      let lastRecordCsv = "";
+      var currentArm = "Arm3", audioClicks = 0, startTs = Date.now(), lastCsv = "";
 
-      setInterval(() => {
-        const sec = Math.floor((Date.now() - startTs) / 1000);
-        document.getElementById("telemetry-lbl").textContent =
-          `F₀ 合成试听 ${audioClicks} 次 · 驻留 ${sec} 秒`;
+      setInterval(function () {
+        $("telemetry").textContent = "已播放声调" + audioClicks + "次　已学习" + Math.floor((Date.now() - startTs) / 1000) + "秒";
       }, 1000);
 
       function hashCode(str) {
-        let h = 2166136261;
-        for (let i = 0; i < str.length; i++) {
-          h ^= str.charCodeAt(i);
-          h = Math.imul(h, 16777619);
-        }
+        var h = 2166136261;
+        for (var i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
         return Math.abs(h);
       }
 
-      function playF0Contour(contour) {
-        audioClicks++;
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) return;
-        const ctx = new AudioCtx();
-        const filter = ctx.createBiquadFilter();
-        filter.type = "lowpass";
-        const now = ctx.currentTime;
-        filter.frequency.setValueAtTime(1400, now);
-
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "triangle";
-        const dur = 0.85;
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.exponentialRampToValueAtTime(0.18, now + 0.06);
-        contour.forEach((val, idx) => {
-          const t = now + (idx / Math.max(1, contour.length - 1)) * dur;
-          const hz = 175 * Math.pow(2, ((val - 34) / 22));
-          if (idx === 0) osc.frequency.setValueAtTime(hz, t);
-          else osc.frequency.linearRampToValueAtTime(hz, t);
+      function setArm(k) {
+        currentArm = k;
+        $("arm-name").textContent = ARMS[k].name;
+        $("arm-desc").textContent = ARMS[k].desc;
+        Array.prototype.forEach.call(document.querySelectorAll(".preview button"), function (b) {
+          b.classList.toggle("on", b.dataset.arm === k);
         });
-        gain.gain.exponentialRampToValueAtTime(0.001, now + dur + 0.05);
-        osc.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now);
-        osc.stop(now + dur + 0.07);
+        renderStim();
       }
 
-      function setArm(armKey) {
-        currentArm = armKey;
-        document.getElementById("arm-name").textContent = ARM_META[armKey].title;
-        document.getElementById("arm-desc").textContent = ARM_META[armKey].desc;
-        document.querySelectorAll(".arm-btn").forEach(b => {
-          b.classList.toggle("active", b.dataset.arm === armKey);
-        });
-        renderStimuli();
-      }
-
-      document.getElementById("btn-assign").addEventListener("click", () => {
-        const sid = document.getElementById("subj-id").value.trim() || "ANON";
-        const grd = document.getElementById("grade-band").value;
-        const exp = document.getElementById("home-exp").value;
-        const idx = hashCode(`${sid}|${grd}|${exp}`) % 3;
-        const arms = ["Arm1", "Arm2", "Arm3"];
+      $("btn-assign").addEventListener("click", function () {
+        var sid = $("subj-id").value.trim() || "ANON";
+        var idx = hashCode(sid + "|" + $("grade-band").value + "|" + $("home-exp").value) % 3;
         startTs = Date.now();
         audioClicks = 0;
-        setArm(arms[idx]);
+        setArm(["Arm1", "Arm2", "Arm3"][idx]);
+      });
+      Array.prototype.forEach.call(document.querySelectorAll(".preview button"), function (b) {
+        b.addEventListener("click", function () { setArm(b.dataset.arm); });
       });
 
-      document.querySelectorAll(".arm-btn").forEach(btn => {
-        btn.addEventListener("click", () => setArm(btn.dataset.arm));
-      });
-
-      function badgeClass(cat) {
-        if (cat.includes("农渔")) return "badge-pill badge-af";
-        if (cat.includes("百工")) return "badge-pill badge-cr";
-        return "badge-pill badge-pr";
-      }
-
-      function buildSparkSvg(hj, st) {
-        const w = 240, h = 54;
-        const mapPts = arr => arr.map((v, i) => {
-          const x = 12 + (i / Math.max(1, arr.length - 1)) * (w - 24);
-          const y = h - 7 - ((v - 18) / 38) * (h - 14);
-          return `${x.toFixed(1)},${y.toFixed(1)}`;
-        }).join(" ");
-        return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="54" style="background:#ffffff;border:1px solid rgba(24,34,40,0.08);border-radius:8px;">
-          <line x1="8" y1="${(h * 0.25).toFixed(1)}" x2="${w - 8}" y2="${(h * 0.25).toFixed(1)}" stroke="rgba(24,34,40,0.06)" stroke-dasharray="2,3"/>
-          <line x1="8" y1="${(h * 0.50).toFixed(1)}" x2="${w - 8}" y2="${(h * 0.50).toFixed(1)}" stroke="rgba(24,34,40,0.06)" stroke-dasharray="2,3"/>
-          <line x1="8" y1="${(h * 0.75).toFixed(1)}" x2="${w - 8}" y2="${(h * 0.75).toFixed(1)}" stroke="rgba(24,34,40,0.06)" stroke-dasharray="2,3"/>
-          <polyline fill="none" stroke="#0F525A" stroke-width="1.6" stroke-dasharray="3,2" opacity="0.6" points="${mapPts(st)}" />
-          <polyline fill="none" stroke="#C05F1D" stroke-width="2.3" stroke-linecap="round" points="${mapPts(hj)}" />
-        </svg>`;
-      }
-
-      function renderStimuli() {
-        const grid = document.getElementById("stim-grid");
-        grid.innerHTML = "";
-        stimItems.forEach(it => {
-          const card = document.createElement("div");
-          card.className = "stim-card";
-          let bodyHtml = `<div class="stim-head"><span class="stim-title">${it.orthography}</span><span class="${badgeClass(it.category)}">${it.category.slice(0, 4)}</span></div>`;
-
+      function renderStim() {
+        var box = $("stim");
+        box.innerHTML = "";
+        stimItems.forEach(function (it, i) {
+          var el = document.createElement("div");
+          el.className = "stim-item";
+          var h = '<div class="k">' + CY.cnNum(i + 1) + "　" + CY.catShort(it.category) + '</div><div class="w">' + CY.esc(it.orthography) + "</div>";
+          var pron = '<div class="pron"><span class="pengim">' + CY.esc(it.pengim_shantou) + '</span><span class="ipa">' + CY.esc(it.ipa_shantou) + "</span></div>";
+          var play = '<button class="textbtn" data-id="' + it.id + '">▶ 听声调</button>';
           if (currentArm === "Arm1") {
-            bodyHtml += `<div style="font-size:12.3px;color:var(--ink-secondary);line-height:1.6;"><strong>普通话简介：</strong>${it.artifact_desc}</div>`;
-            bodyHtml += `<div class="mask-note">对照组屏蔽：1960 潮拼、国际音标、基频曲线与空间锚点</div>`;
+            h += "<p>" + CY.esc(it.artifact_desc) + "</p>";
+            h += '<div class="masked">本组不提供读音、声调图和地点</div>';
           } else if (currentArm === "Arm2") {
-            bodyHtml += `<div class="phon-strip"><div><strong>1960 潮拼：</strong><span class="mono">${it.pengim_shantou}</span></div><div><strong>国际音标：</strong><span class="mono">${it.ipa_shantou}</span></div></div>`;
-            bodyHtml += `<button class="synth-btn" data-id="${it.id}">▶ 播放 F₀ 声调合成试听</button>`;
-            bodyHtml += `<div class="mask-note">单模态组屏蔽：器物生计考据、正字纠偏与古村空间坐标</div>`;
+            h += pron + play;
+            h += '<div class="masked">本组不提供做法说明、俗称辨误和地点</div>';
           } else {
-            bodyHtml += `<div style="font-size:11.5px;color:var(--amber-700);font-weight:600;">俗称 / 辨误：${it.folk_alias}</div>`;
-            bodyHtml += `<div class="phon-strip"><div><strong>1960 潮拼：</strong><span class="mono">${it.pengim_shantou}</span></div><div><strong>国际音标：</strong><span class="mono">${it.ipa_shantou}</span></div></div>`;
-            bodyHtml += buildSparkSvg(it.f0_contour_haojiang, it.f0_contour_shantou);
-            bodyHtml += `<button class="synth-btn" data-id="${it.id}">▶ 试听双腔声调包络（赭线：濠江 / 青虚线：市区）</button>`;
-            bodyHtml += `<div style="font-size:12px;color:var(--ink-secondary);line-height:1.55;"><strong>方言考据：</strong>${it.haojiang_accent_note}<br/><strong>器物生计：</strong>${it.artifact_desc}</div>`;
-            bodyHtml += `<div style="font-size:11.3px;color:var(--celadon-700);font-weight:600;margin-top:auto;">📍 濠江区 ${it.site_street} · ${it.site_village.split("（")[0]}</div>`;
+            h += pron + '<svg data-tone="' + it.id + '"></svg>' + play;
+            h += "<p><b>俗称</b>" + CY.esc(it.folk_alias) + "</p>";
+            h += "<p><b>音韵</b>" + CY.esc(it.haojiang_accent_note) + "</p>";
+            h += "<p><b>做法</b>" + CY.esc(it.artifact_desc) + "</p>";
+            h += "<p><b>所在</b>濠江区" + CY.esc(it.site_street) + CY.esc(CY.villageShort(it.site_village)) + "</p>";
           }
-          card.innerHTML = bodyHtml;
-          grid.appendChild(card);
+          el.innerHTML = h;
+          box.appendChild(el);
+          var svg = el.querySelector("svg[data-tone]");
+          if (svg) CY.drawTone(svg, it, { w: 360, h: 96, padL: 16, padR: 34, padT: 10, padB: 8, font: 10 });
         });
-
-        grid.querySelectorAll(".synth-btn").forEach(btn => {
-          btn.addEventListener("click", () => {
-            const item = seeds.find(s => s.id === btn.dataset.id);
-            if (item) playF0Contour(item.f0_contour_haojiang);
+        Array.prototype.forEach.call(box.querySelectorAll("button[data-id]"), function (b) {
+          b.addEventListener("click", function () {
+            var it = seeds.find(function (s) { return s.id === b.dataset.id; });
+            audioClicks++;
+            CY.playTone(b.parentNode.querySelector("svg[data-tone]"), it.f0_contour_haojiang, 170, "#a8321d");
           });
         });
       }
 
-      const qList = document.getElementById("quiz-list");
-      QUIZ.forEach((item, qIdx) => {
-        const div = document.createElement("div");
-        div.className = "quiz-item";
-        div.id = `quiz-card-${qIdx}`;
-        const optsHtml = item.opts.map((opt, oIdx) => `
-          <label class="opt-lbl">
-            <input type="radio" name="q_${qIdx}" value="${oIdx}" />
-            <span>${opt}</span>
-          </label>
-        `).join("");
-        div.innerHTML = `<div class="quiz-q"><span class="q-badge">${item.tag}</span><span>${qIdx + 1}. ${item.q}</span></div><div class="quiz-opts">${optsHtml}</div>`;
-        qList.appendChild(div);
+      var qList = $("quiz");
+      QUIZ.forEach(function (item, qi) {
+        var li = document.createElement("li");
+        li.className = "q";
+        li.id = "q-" + qi;
+        li.innerHTML = '<div class="tag">' + item.tag + '</div><div class="stem">' + item.q + '</div><div class="opts">' +
+          item.opts.map(function (o, oi) {
+            return '<label><input type="radio" name="q_' + qi + '" value="' + oi + '" /><span>' + "ABCD"[oi] + "　" + o + "</span></label>";
+          }).join("") + '</div><span class="mark"></span>';
+        qList.appendChild(li);
       });
 
-      document.getElementById("btn-submit").addEventListener("click", () => {
-        let correct = 0;
-        let answered = 0;
-        QUIZ.forEach((item, qIdx) => {
-          const card = document.getElementById(`quiz-card-${qIdx}`);
-          card.classList.remove("graded-ok", "graded-err");
-          const sel = document.querySelector(`input[name="q_${qIdx}"]:checked`);
+      $("btn-submit").addEventListener("click", function () {
+        var correct = 0, answered = 0;
+        QUIZ.forEach(function (item, qi) {
+          var li = $("q-" + qi), sel = document.querySelector('input[name="q_' + qi + '"]:checked');
+          li.classList.remove("ok", "bad");
+          var mark = li.querySelector(".mark");
           if (sel) {
             answered++;
-            const v = Number(sel.value);
-            if (v === item.ans) {
-              correct++;
-              card.classList.add("graded-ok");
-            } else {
-              card.classList.add("graded-err");
-            }
-          } else {
-            card.classList.add("graded-err");
-          }
+            if (Number(sel.value) === item.ans) { correct++; li.classList.add("ok"); mark.textContent = "对"; }
+            else { li.classList.add("bad"); mark.textContent = "错，应选" + "ABCD"[item.ans]; }
+          } else { li.classList.add("bad"); mark.textContent = "未答，应选" + "ABCD"[item.ans]; }
         });
-
-        const dwellSec = Math.floor((Date.now() - startTs) / 1000);
-        const pct = ((correct / QUIZ.length) * 100).toFixed(1);
-        const sid = document.getElementById("subj-id").value.trim() || "ANON";
-        const grd = document.getElementById("grade-band").value;
-        const exp = document.getElementById("home-exp").value;
-        const tsIso = new Date().toISOString();
-
-        lastRecordCsv = [
+        var dwell = Math.floor((Date.now() - startTs) / 1000);
+        var pct = ((correct / QUIZ.length) * 100).toFixed(1);
+        var sid = $("subj-id").value.trim() || "ANON";
+        var grd = $("grade-band").value, exp = $("home-exp").value;
+        lastCsv = [
           "subject_id,timestamp_utc,grade_stratum,home_dialect_exposure,assigned_arm,dwell_seconds,f0_synth_clicks,answered_count,correct_count,accuracy_pct",
-          `${sid},${tsIso},${grd},${exp},${currentArm},${dwellSec},${audioClicks},${answered},${correct},${pct}`
+          [sid, new Date().toISOString(), grd, exp, currentArm, dwell, audioClicks, answered, correct, pct].join(",")
         ].join("\n");
-
-        const rBox = document.getElementById("result-box");
-        rBox.style.display = "block";
-        rBox.innerHTML = `
-          <div class="res-top">
-            <div class="res-score">测评已完成：得分 ${correct} / ${QUIZ.length}（正确率 ${pct}%）</div>
-            <span class="card-meta-pill tnum">已答 ${answered} / ${QUIZ.length} 题</span>
-          </div>
-          <div style="font-size:12.5px;color:var(--ink-primary);line-height:1.65;">
-            <div>受试编号：<strong class="mono">${sid}</strong> ｜ 分层：<strong class="mono">${grd} × ${exp}</strong> ｜ 实验臂：<strong>${ARM_META[currentArm].title}</strong></div>
-            <div>行为遥测：驻留时长 <strong>${dwellSec} 秒</strong>，触发 F₀ 声调包络合成试听 <strong>${audioClicks} 次</strong>。</div>
-            <div>统计对接：导出 CSV 后可直接输入项目代码库 <code class="mono" style="background:#fff;padding:1px 5px;border-radius:4px;">chaoyin_bowu_core/rct_analytics.py</code> 执行协方差分析。</div>
-          </div>
-        `;
-        document.getElementById("btn-csv").style.display = "inline-flex";
+        var r = $("result");
+        r.style.display = "block";
+        r.innerHTML = '<div class="score">答对' + correct + "题，共" + QUIZ.length + "题</div>" +
+          "<p>编号" + CY.esc(sid) + "，" + ARMS[currentArm].name.split("　")[0] + "，学习" + dwell + "秒，播放声调" + audioClicks + "次，作答" + answered + "题。</p>" +
+          "<p>下载的记录可直接交给 <code>chaoyin_bowu_core/rct_analytics.py</code> 做协方差分析。</p>";
+        $("btn-csv").style.display = "inline-block";
       });
 
-      document.getElementById("btn-csv").addEventListener("click", () => {
-        if (!lastRecordCsv) return;
-        const blob = new Blob(["\uFEFF" + lastRecordCsv], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
+      $("btn-csv").addEventListener("click", function () {
+        if (!lastCsv) return;
+        var url = URL.createObjectURL(new Blob(["\uFEFF" + lastCsv], { type: "text/csv;charset=utf-8;" }));
+        var a = document.createElement("a");
         a.href = url;
-        a.download = `chaoyin_rct_record_${Date.now()}.csv`;
+        a.download = "chaoyin_rct_record_" + Date.now() + ".csv";
         a.click();
         URL.revokeObjectURL(url);
       });
 
-      renderStimuli();
+      setArm("Arm3");
     })();
   </script>
 </body>

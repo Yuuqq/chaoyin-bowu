@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>关于本项目 · 潮音博物</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" media="print" onload="this.media='all'" />
+  <link rel="stylesheet" href="./theme.css" />
+  <style>
+    .essay { max-width: 680px; margin: 48px auto 0; }
+    .essay h1 {
+      font-size: clamp(32px, 4.4vw, 44px);
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      line-height: 1.25;
+      margin: 0 0 8px;
+    }
+    .essay .dek {
+      font-family: var(--sans);
+      font-size: 13.5px;
+      color: var(--ink-3);
+      letter-spacing: 0.08em;
+      margin: 0 0 30px;
+    }
+    .essay h2 {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin: 44px 0 10px;
+    }
+    .essay p {
+      font-size: 16.5px;
+      line-height: 2;
+      text-align: justify;
+      margin: 0 0 14px;
+    }
+    .essay .first::first-letter {
+      float: left;
+      font-size: 3.1em;
+      line-height: 1;
+      padding: 6px 10px 0 0;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .tools { margin: 14px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
+    .tools li { padding: 14px 0; border-bottom: 1px solid var(--hair); }
+    .tools a { display: block; }
+    .tools .t {
+      font-size: 17px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tools .t .go { font-family: var(--sans); font-size: 13px; font-weight: 400; color: var(--red); white-space: nowrap; }
+    .tools .d { font-size: 14.5px; line-height: 1.85; color: var(--ink-2); margin-top: 4px; }
+    .tools a:hover .t { color: var(--red); }
+    .fine {
+      margin-top: 44px;
+      padding-top: 14px;
+      border-top: 1px solid var(--hair);
+      font-family: var(--sans);
+      font-size: 13px;
+      line-height: 1.9;
+      color: var(--ink-3);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="masthead">
+        <a class="wordmark" href="index.html">
+          <span class="seal" aria-hidden="true">潮音</span>
+          <span class="wm-text">
+            <span class="wm-title">潮音博物</span>
+            <span class="wm-sub">汕头濠江方言风物录</span>
+          </span>
+        </a>
+        <nav class="topnav">
+          <a href="index.html">词目</a>
+          <a class="on" href="about.html">关于本项目</a>
+        </nav>
+      </div>
+      <div class="rules"></div>
+    </header>
+
+    <article class="essay">
+      <h1>关于本项目</h1>
+      <p class="dek">汕头大学“潮音博物”课题组</p>
+
+      <h2>一　这是什么</h2>
+      <p class="first" id="p-what"></p>
+      <p>每一条都按辞书的体例来写。先给出潮汕正字，再标1960年《潮州话拼音方案》读音和国际音标，然后说明这个词的音韵特点、器物做法和所在地点。村里导览牌上的二维码扫开后，看到的就是对应词条的手机页面。</p>
+
+      <h2>二　声调图怎么看</h2>
+      <p>词条中的声调图按五度标调法绘制，纵轴从下到上为一度到五度。朱色实线是濠江口音，灰色虚线是汕头市区口音，用来比较两地读同一个词时音高怎样起落。</p>
+      <p>“听声调”按钮播放的是按这条走势合成的示意音，帮助读者感受升降，并非真人录音。</p>
+
+      <h2>三　为什么要做</h2>
+      <p>通用的大语言模型对潮汕方言了解很少。问它“鱼饭”是什么，它常说是米饭盖鱼，其实是渔船上用盐水煮熟、放凉当饭吃的海鱼。问它“力落”，它会解释成力气衰落，潮汕人说的却是勤快肯干。</p>
+      <p id="p-bench"></p>
+      <p>词目页的查词框遵循同样的原则：查不到的词，只回答“尚未收录”，不作解释。</p>
+
+      <h2>四　研究工具</h2>
+      <p>下面几个页面主要供研究和评审使用。</p>
+      <ul class="tools">
+        <li>
+          <a href="graph.html">
+            <div class="t"><span>知识图谱</span><span class="go">打开 →</span></div>
+            <div class="d" id="d-graph"></div>
+          </a>
+        </li>
+        <li>
+          <a href="experiment.html">
+            <div class="t"><span>课堂对照实验施测页</span><span class="go">打开 →</span></div>
+            <div class="d">为立项后在濠江中小学开展三组对照实验准备的施测界面，用来比较普通话图文、方言读音和完整词条三种学习材料的效果。目前只是样例，尚未正式施测。</div>
+          </a>
+        </li>
+        <li>
+          <a href="schema/chaoyin_nominal_schema_v1.json">
+            <div class="t"><span>词条数据规范</span><span class="go">查看 →</span></div>
+            <div class="d" id="d-schema"></div>
+          </a>
+        </li>
+      </ul>
+
+      <p class="fine">本站的读音、释义和地点信息由课题组人工核对。部分界面代码与文字整理借助了人工智能工具，相关内容均已经过人工复核。</p>
+    </article>
+
+    <footer class="colophon">
+      <div class="colophon-inner">
+        <span>汕头大学“潮音博物”课题组　·　濠江方言风物录　首期</span>
+        <span class="links"><a href="index.html">返回词目</a></span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="./seed_data.js"></script>
+  <script src="./app.js"></script>
+  <script>
+    (function () {
+      var CY = window.CY, f = CY.facts || {}, items = CY.items;
+      var seed = f.prototype_v01_seed || {}, kg = f.knowledge_graph_v01 || {}, b = f.pilot_rag_benchmark || {};
+      function pct(v) { return (v >= 100 ? "100" : v.toFixed(1)) + "%"; }
+      function set(id, txt) { var el = document.getElementById(id); if (el && txt) el.textContent = txt; }
+
+      var cats = seed.category_counts || {};
+      set("p-what",
+        "潮音博物是一部潮汕方言风物录。首期以汕头市濠江区为样板，围绕礐石、达濠、马滘、广澳" +
+        CY.cnNum(seed.covered_haojiang_streets_count || 4) + "个街道的" + CY.cnNum(seed.covered_haojiang_sites_count || 5) +
+        "处村落与古城整理，收入农渔饮食、非遗百工、侨乡俗谚三类风物共" + CY.cnNum(items.length) + "条" +
+        (cats["农渔饮食风物"] ? "，每类" + CY.cnNum(cats["农渔饮食风物"]) + "条" : "") + "。");
+
+      if (b.n_questions_total) {
+        set("p-bench",
+          "为此，课题组把核对过的词条整理成一张方言知识图谱，让模型回答之前先查对其中的正字和读音。我们用" +
+          b.n_questions_total + "道潮汕风物测试题，在" + b.models_count + "款国产大模型上做了" + b.total_api_evaluations +
+          "次测试。接入知识图谱后，带调号的潮拼转写准确率由" + pct(b.pooled_zero_shot_pengim_acc_pct) + "提高到" +
+          pct(b.pooled_rag_pengim_acc_pct) + "，回答中的差错率由" + pct(b.pooled_zero_shot_halluc_pct) + "降到" +
+          pct(b.pooled_rag_halluc_pct) + "。遇到图谱里没有的词，模型都如实回答暂未收录，不再自行编造。");
+      }
+      if (kg.total_nodes) {
+        set("d-graph",
+          "收录" + kg.total_nodes + "个节点、" + kg.total_edges_triples + "条关系，可以查看每个词条与本字、读音特点、工艺材料和地点之间的联系。");
+      }
+      if (seed.schema_required_fields) {
+        set("d-schema",
+          "规定每个词条必须填写的" + seed.schema_required_fields + "项内容及格式，其他县区沿用同一规范，就能把各自的词条并入同一部风物录。");
+      }
+    })();
+  </script>
+</body>
+</html>

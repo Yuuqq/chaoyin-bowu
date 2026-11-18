@@ -3,1482 +3,379 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>潮音博物 · 粤东县域潮汕方言多模态博物图谱平台（V0.1 汕头濠江样板）</title>
+  <title>潮音博物 · 汕头濠江方言风物录</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&display=swap" media="print" onload="this.media='all'" />
   <link rel="stylesheet" href="./theme.css" />
   <style>
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    main.workbench {
-      width: 100%;
-      max-width: 1460px;
-      margin: 0 auto;
-      padding: 14px 20px 22px;
+    .book {
       display: grid;
-      grid-template-columns: 316px minmax(480px, 1fr) 374px;
-      gap: 14px;
+      grid-template-columns: 210px minmax(0, 1fr) 210px;
+      gap: 0 60px;
+      margin-top: 36px;
       align-items: start;
-      flex: 1;
     }
 
-    .panel-pad {
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* Left Column: Search + Cartography + List */
-    .search-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .search-wrap svg {
-      position: absolute;
-      left: 11px;
-      width: 15px;
-      height: 15px;
-      color: var(--ink-muted);
-      pointer-events: none;
-    }
-    .search-field {
-      width: 100%;
-      padding: 8px 30px 8px 34px;
-      border-radius: var(--r-md);
-      border: 1px solid var(--border-strong);
-      background: var(--surface-subtle);
-      color: var(--ink-primary);
-      font-size: 12.5px;
-      font-family: inherit;
-      outline: none;
-      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
-    }
-    .search-field:focus {
-      background: #ffffff;
-      border-color: var(--celadon-700);
-      box-shadow: 0 0 0 3px rgba(15, 82, 90, 0.10);
-    }
-    .search-clear {
-      position: absolute;
-      right: 8px;
-      border: none;
-      background: transparent;
-      color: var(--ink-muted);
-      cursor: pointer;
-      font-size: 14px;
-      line-height: 1;
-      padding: 2px 5px;
-      display: none;
-    }
-
-    .cat-segmented {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 4px;
-      background: var(--surface-sand);
-      padding: 3px;
-      border-radius: var(--r-md);
-      border: 1px solid rgba(24, 34, 40, 0.05);
-    }
-    .cat-btn {
-      border: none;
-      background: transparent;
-      color: var(--ink-secondary);
-      padding: 6px 4px;
-      border-radius: 9px;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-    }
-    .cat-btn:hover {
-      color: var(--ink-primary);
-    }
-    .cat-btn.active {
-      background: #ffffff;
-      color: var(--celadon-900);
-      box-shadow: 0 1px 3px rgba(15, 38, 44, 0.10);
-    }
-
-    .map-card {
-      background: #eaf1f3;
-      border: 1px solid rgba(15, 82, 90, 0.14);
-      border-radius: var(--r-md);
-      padding: 8px;
-      position: relative;
-      overflow: hidden;
-    }
-    .map-node {
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-    .map-node circle.pin-core {
-      transition: r 0.15s ease;
-    }
-    .map-node:hover circle.pin-core {
-      r: 7.5;
-    }
-    .map-node .pin-halo {
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-    .map-node.selected .pin-halo {
-      opacity: 1;
-    }
-
-    .village-filter-bar {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      margin-top: 6px;
-      padding: 5px 9px;
-      background: rgba(255, 255, 255, 0.85);
-      border-radius: var(--r-sm);
-      font-size: 11.5px;
-      color: var(--celadon-900);
-      font-weight: 600;
-    }
-    .village-filter-bar.show {
-      display: flex;
-    }
-    .reset-vil-btn {
-      border: none;
-      background: var(--celadon-100);
-      color: var(--celadon-700);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: var(--r-pill);
-      cursor: pointer;
-    }
-
-    .item-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 416px;
+    /* 词目索引 */
+    .index {
+      position: sticky;
+      top: 22px;
+      max-height: calc(100vh - 44px);
       overflow-y: auto;
-      padding-right: 3px;
+      padding-right: 6px;
+      scrollbar-width: thin;
     }
-    .item-row {
-      padding: 10px 11px;
-      border-radius: var(--r-md);
-      border: 1px solid var(--border-hairline);
-      background: var(--surface-subtle);
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s, transform 0.12s;
-    }
-    .item-row:hover {
-      background: #ffffff;
-      border-color: rgba(15, 82, 90, 0.28);
-    }
-    .item-row.active {
-      background: var(--celadon-50);
-      border-color: var(--celadon-700);
-      box-shadow: inset 3px 0 0 var(--celadon-700);
-    }
-    .item-row-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .item-row-title {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: var(--ink-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .item-row-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-top: 4px;
-      font-size: 11px;
-      color: var(--ink-muted);
-    }
-    .item-row-pengim {
-      font-family: var(--font-mono);
-      color: var(--celadon-700);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .item-row-site {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      text-align: right;
-    }
-
-    /* Center Column: Editorial Specimen Showcase */
-    .specimen-hero {
-      background: linear-gradient(180deg, #ffffff 0%, #fcfbf8 100%);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-lg);
-      padding: 18px 20px;
-      box-shadow: var(--shadow-card);
-    }
-
-    .specimen-top-meta {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .id-cluster {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px;
-    }
-    .mono-badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--celadon-900);
-      background: var(--celadon-100);
-      padding: 3px 9px;
-      border-radius: var(--r-pill);
-    }
-    .qr-badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--ink-secondary);
-      background: var(--surface-sand);
-      padding: 3px 9px;
-      border-radius: var(--r-pill);
-    }
-    .quick-link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      text-decoration: none;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: var(--celadon-700);
-      background: #ffffff;
-      border: 1px solid rgba(15, 82, 90, 0.24);
-      padding: 4px 10px;
-      border-radius: var(--r-pill);
-      transition: all 0.15s;
-    }
-    .quick-link-btn:hover {
-      background: var(--celadon-700);
-      color: #ffffff;
-    }
-
-    .specimen-word {
-      font-family: var(--font-serif);
-      font-size: 30px;
-      font-weight: 700;
-      color: var(--celadon-900);
-      line-height: 1.25;
-      letter-spacing: 0.02em;
-    }
-    .specimen-sub-row {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      margin-top: 6px;
-    }
-    .specimen-alias {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--amber-700);
-    }
-    .heritage-pill {
-      font-size: 11.5px;
-      color: var(--ink-secondary);
-      background: var(--amber-50);
-      border: 1px solid rgba(168, 78, 20, 0.18);
-      padding: 2px 9px;
-      border-radius: var(--r-pill);
-    }
-
-    .geo-strip {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 12px;
-      padding: 8px 12px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      font-size: 12px;
-      color: var(--ink-secondary);
-    }
-    .geo-left {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-      color: var(--ink-primary);
-    }
-    .geo-coords {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      color: var(--ink-muted);
-    }
-
-    /* Phonetics Grid */
-    .phonetic-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .phon-card {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-    }
-    .phon-k {
-      font-size: 11px;
-      color: var(--ink-muted);
-      margin-bottom: 3px;
-    }
-    .phon-v {
-      font-family: var(--font-mono);
-      font-size: 14.5px;
-      font-weight: 700;
-      color: var(--celadon-900);
-      word-break: break-word;
-    }
-    .copy-icon-btn {
-      border: 1px solid var(--border-hairline);
-      background: #ffffff;
-      color: var(--ink-secondary);
-      border-radius: var(--r-sm);
-      padding: 5px 7px;
-      font-size: 11px;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: all 0.15s;
-    }
-    .copy-icon-btn:hover {
-      border-color: var(--celadon-700);
-      color: var(--celadon-700);
-    }
-
-    /* Acoustic F0 Box */
-    .acoustic-panel {
-      padding: 16px 18px;
-    }
-    .acoustic-head {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .play-group {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
-    }
-    .btn-play-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-      background: var(--celadon-700);
-      color: #ffffff;
-      padding: 7px 14px;
-      border-radius: var(--r-pill);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(15, 82, 90, 0.22);
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-play-primary:hover {
-      background: var(--celadon-900);
-    }
-    .btn-play-primary:active {
-      transform: scale(0.98);
-    }
-    .btn-play-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      border: 1px solid rgba(15, 82, 90, 0.24);
-      background: var(--celadon-50);
-      color: var(--celadon-900);
-      padding: 7px 12px;
-      border-radius: var(--r-pill);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .btn-play-secondary:hover {
-      background: var(--celadon-100);
-    }
-
-    .chart-shell {
-      position: relative;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 8px 10px 6px;
-    }
-    .chart-tooltip {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      background: rgba(24, 34, 40, 0.90);
-      color: #ffffff;
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: var(--r-pill);
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.12s;
-      font-variant-numeric: tabular-nums;
-    }
-    .chart-tooltip.show {
-      opacity: 1;
-    }
-    .chart-legend {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-      padding: 0 4px;
-      font-size: 11.5px;
-      color: var(--ink-secondary);
-    }
-    .legend-items {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .leg-dot {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-    }
-
-    /* Field Notes 2-col */
-    .notes-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .note-card {
-      padding: 14px 16px;
-    }
-    .note-head {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--celadon-900);
-      margin-bottom: 8px;
-    }
-    .note-head svg {
-      width: 15px;
-      height: 15px;
-      color: var(--amber-600);
-      flex-shrink: 0;
-    }
-    .note-body {
-      font-size: 12.8px;
-      line-height: 1.68;
-      color: var(--ink-secondary);
-    }
-
-    /* Right Column: Guardrail & Provenance */
-    .bench-strip {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 8px;
-      text-align: center;
-    }
-    .bench-cell .b-val {
-      font-size: 13.5px;
-      font-weight: 800;
-      color: var(--celadon-700);
-      display: block;
-    }
-    .bench-cell .b-lbl {
-      font-size: 10.5px;
-      color: var(--ink-muted);
-    }
-
-    .guardrail-tester {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .qa-input-row {
-      display: flex;
-      gap: 6px;
-    }
-    .qa-input {
-      flex: 1;
-      padding: 7px 10px;
-      border-radius: var(--r-sm);
-      border: 1px solid var(--border-strong);
-      background: #ffffff;
-      font-size: 12px;
-      font-family: inherit;
-      color: var(--ink-primary);
+    .idx-details > summary { display: none; }
+    .lookup {
+      width: 100%;
+      margin-top: 10px;
+      border: 0;
+      border-bottom: 1px solid var(--rule);
+      border-radius: 0;
+      background: transparent;
+      padding: 6px 0;
+      font-family: var(--serif);
+      font-size: 15px;
       outline: none;
     }
-    .qa-input:focus {
-      border-color: var(--celadon-700);
+    .lookup::placeholder { color: var(--ink-3); }
+    .lookup-msg {
+      font-family: var(--sans);
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: var(--ink-3);
+      margin-top: 8px;
     }
-    .qa-btn {
-      border: none;
-      background: var(--celadon-700);
-      color: #ffffff;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 7px 12px;
-      border-radius: var(--r-sm);
+    .lookup-msg:empty { display: none; }
+    .lookup-msg.miss { color: var(--red); }
+    .idx-mode {
+      display: flex;
+      gap: 14px;
+      margin-top: 16px;
+      font-family: var(--sans);
+      font-size: 13px;
+    }
+    .idx-mode button {
+      background: none;
+      border: 0;
+      padding: 0 0 2px;
       cursor: pointer;
-      white-space: nowrap;
+      color: var(--ink-3);
+      border-bottom: 1px solid transparent;
     }
-    .qa-btn:hover {
-      background: var(--celadon-900);
+    .idx-mode button.on { color: var(--ink); border-bottom-color: var(--ink); }
+    .idx-group h3 {
+      margin: 22px 0 4px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--hair);
+      font-family: var(--sans);
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--ink-3);
     }
-    .qa-chips {
+    .idx-item {
       display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-    .qa-chip {
-      border: 1px solid var(--border-hairline);
-      background: #ffffff;
-      color: var(--ink-secondary);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: var(--r-pill);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .qa-chip:hover {
-      border-color: var(--celadon-700);
-      color: var(--celadon-700);
-    }
-    .qa-chip.placebo {
-      border-color: rgba(179, 38, 30, 0.25);
-      color: var(--err-700);
-      background: #fff9f8;
-    }
-
-    .qa-live-result {
-      display: none;
-      padding: 9px 11px;
-      border-radius: var(--r-sm);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-    .qa-live-result.show {
-      display: block;
-    }
-    .qa-live-result.hit {
-      background: var(--ok-bg);
-      border: 1px solid var(--ok-border);
-      color: var(--ink-primary);
-    }
-    .qa-live-result.abstain {
-      background: var(--amber-50);
-      border: 1px solid rgba(168, 78, 20, 0.28);
-      color: var(--ink-primary);
-    }
-
-    .prompt-bubble {
-      background: var(--surface-sand);
-      border-radius: var(--r-md);
-      padding: 10px 12px;
-      font-size: 12.2px;
-      line-height: 1.55;
-      color: var(--ink-primary);
-    }
-    .prompt-bubble .p-lbl {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--celadon-700);
-      display: block;
-      margin-bottom: 3px;
-    }
-
-    .diff-card {
-      border-radius: var(--r-md);
-      padding: 11px 13px;
-      font-size: 12.2px;
-      line-height: 1.6;
-    }
-    .diff-card.bad {
-      background: var(--err-bg);
-      border: 1px solid var(--err-border);
-    }
-    .diff-card.good {
-      background: var(--ok-bg);
-      border: 1px solid var(--ok-border);
-    }
-    .diff-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 5px;
-    }
-    .diff-card.bad .diff-badge { color: var(--err-700); }
-    .diff-card.good .diff-badge { color: var(--ok-700); }
-
-    .provenance-card {
-      background: var(--surface-subtle);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--r-md);
-      padding: 11px 12px;
-    }
-    .prov-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: var(--ink-primary);
-    }
-    .prov-link {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--celadon-700);
-      text-decoration: none;
-    }
-    .prov-link:hover { text-decoration: underline; }
-    .prov-rows {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      font-size: 11.5px;
-    }
-    .prov-row {
-      display: flex;
-      justify-content: space-between;
       align-items: baseline;
-      gap: 8px;
-      padding: 4px 6px;
-      background: #ffffff;
-      border-radius: 6px;
-      border: 1px solid rgba(24, 34, 40, 0.05);
+      gap: 6px;
+      padding: 3px 0;
+      font-size: 15px;
+      color: var(--ink-2);
     }
-    .prov-k {
-      color: var(--ink-muted);
-      white-space: nowrap;
-      flex-shrink: 0;
+    .idx-item .w { white-space: nowrap; }
+    .idx-item .lead {
+      flex: 1;
+      min-width: 12px;
+      border-bottom: 1px dotted rgba(22, 20, 15, 0.3);
+      transform: translateY(-4px);
     }
-    .prov-v {
-      color: var(--ink-primary);
-      font-weight: 600;
-      text-align: right;
-      word-break: break-word;
-    }
+    .idx-item .n { font-family: var(--latin); font-size: 13px; color: var(--ink-3); }
+    .idx-item:hover { color: var(--ink); }
+    .idx-item.on, .idx-item.on .n { color: var(--red); }
 
-    @media (max-width: 1220px) {
-      main.workbench {
-        grid-template-columns: 295px 1fr;
-      }
-      section.rail-right {
-        grid-column: 1 / -1;
+    .entry { max-width: 660px; min-width: 0; }
+    .margin { position: sticky; top: 22px; padding-top: 4px; }
+
+    @media (max-width: 1100px) {
+      .book { grid-template-columns: 190px minmax(0, 1fr); gap: 0 44px; }
+      .margin {
+        position: static;
+        grid-column: 2;
+        margin-top: 36px;
+        padding-top: 20px;
+        border-top: 1px solid var(--hair);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 36px;
       }
     }
-    @media (max-width: 860px) {
-      main.workbench {
-        grid-template-columns: 1fr;
-        padding: 12px;
+    @media (max-width: 760px) {
+      .book { grid-template-columns: 1fr; margin-top: 18px; }
+      .index {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        border-bottom: 1px solid var(--hair);
+        padding: 0 0 8px;
+        margin-bottom: 26px;
       }
-      .phonetic-grid, .notes-grid {
-        grid-template-columns: 1fr;
+      .idx-details > summary {
+        display: flex;
+        justify-content: space-between;
+        cursor: pointer;
+        list-style: none;
+        font-family: var(--sans);
+        font-size: 14px;
+        padding: 6px 0;
       }
+      .idx-details > summary::-webkit-details-marker { display: none; }
+      .margin { grid-column: 1; grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <header class="app-bar">
-    <a class="brand-lockup" href="index.html">
-      <div class="brand-mark" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="18" height="18" rx="4" stroke="#F5E6C8" stroke-width="1.6"/>
-          <path d="M6.5 14C8.5 14 9 8.5 11.5 8.5C14 8.5 13.5 15.5 16 15.5C17.2 15.5 17.8 13 18.2 11.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
-        </svg>
+  <div class="wrap">
+    <header>
+      <div class="masthead">
+        <a class="wordmark" href="index.html">
+          <span class="seal" aria-hidden="true">潮音</span>
+          <span class="wm-text">
+            <span class="wm-title">潮音博物</span>
+            <span class="wm-sub">汕头濠江方言风物录</span>
+          </span>
+        </a>
+        <nav class="topnav">
+          <a class="on" href="index.html">词目</a>
+          <a href="about.html">关于本项目</a>
+        </nav>
       </div>
-      <div class="brand-text">
-        <div class="brand-title-row">
-          <span class="brand-name">潮音博物</span>
-          <span class="version-chip">V0.1 · 汕头濠江先导库</span>
+      <div class="rules"></div>
+    </header>
+
+    <div class="book">
+      <aside class="index">
+        <details class="idx-details" id="idx-details" open>
+          <summary><span>词目</span><span id="idx-sum-count"></span></summary>
+          <div class="label">词目</div>
+          <input class="lookup" id="lookup" type="search" placeholder="查词，如：鱼饭" autocomplete="off" />
+          <div class="lookup-msg" id="lookup-msg"></div>
+          <div class="idx-mode">
+            <button data-mode="cat" class="on">按门类</button>
+            <button data-mode="site">按地点</button>
+          </div>
+          <nav id="idx-list"></nav>
+        </details>
+      </aside>
+
+      <article class="entry">
+        <div class="kicker"><span class="no" id="e-no"></span>　<span id="e-cat"></span></div>
+        <h1 class="headword" id="e-word"></h1>
+        <div class="pron">
+          <span class="pengim" id="e-pengim"></span>
+          <span class="ipa" id="e-ipa"></span>
         </div>
-        <div class="brand-sub">粤东县域潮汕方言多模态博物图谱与活态传承平台</div>
-      </div>
-    </a>
+        <div class="listen">
+          <button class="textbtn" id="play-hj">▶ 听声调　濠江口音</button>
+          <button class="textbtn quiet" id="play-st">▶ 听声调　汕头市区口音</button>
+        </div>
 
-    <nav class="nav-segmented" aria-label="主功能切换">
-      <a class="nav-tab active" href="index.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/><line x1="13" y1="9" x2="18" y2="9"/><line x1="13" y1="13" x2="18" y2="13"/></svg>
-        风物图鉴与声学台
-      </a>
-      <a class="nav-tab" href="graph.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M10.5 7.2L6.4 15.8M13.5 7.2L17.6 15.8M7.5 18H16.5"/></svg>
-        知识图谱漫游
-      </a>
-      <a class="nav-tab" href="experiment.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v5.5L5.2 17.8A2 2 0 0 0 7 20.5h10a2 2 0 0 0 1.8-2.7L14 8.5V3"/></svg>
-        三臂对照实验
-      </a>
-      <a class="nav-tab" id="nav-mobile-link" href="mobile.html?id=CY-AF-001">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2.5" width="10" height="19" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-        手机扫码 H5
-      </a>
-    </nav>
+        <hr class="hair" />
+        <p class="para"><b>俗称</b><span id="e-alias"></span></p>
+        <p class="para"><b>音韵</b><span id="e-accent"></span></p>
+        <p class="para"><b>形制与做法</b><span id="e-desc"></span></p>
 
-    <div class="header-metrics">
-      <div class="stat-chip tnum"><span class="stat-dot"></span><strong id="kpi-seed">18</strong> 项审校标本</div>
-      <div class="stat-chip tnum">综合差错率 <strong id="kpi-halluc">3.6%</strong></div>
-      <a class="schema-link" href="schema/chaoyin_nominal_schema_v1.json" target="_blank" rel="noopener">JSON-LD ↗</a>
+        <figure class="tone-fig">
+          <svg id="tone" role="img" aria-label="声调走势图"></svg>
+          <figcaption>声调走势，按五度标调法绘制，纵轴一度最低、五度最高。朱色实线为濠江口音，灰色虚线为汕头市区口音。“听声调”播放的是按这条走势合成的示意音，并非真人录音。</figcaption>
+        </figure>
+
+        <p class="note"><span class="note-mark">注</span><span id="e-trap"></span></p>
+
+        <nav class="pager">
+          <a id="prev" href="#"><span class="dir">上一条</span><span class="pw" id="prev-w"></span></a>
+          <a id="next" class="next" href="#"><span class="dir">下一条</span><span class="pw" id="next-w"></span></a>
+        </nav>
+      </article>
+
+      <aside class="margin">
+        <dl class="meta">
+          <dt>档案号</dt>
+          <dd class="mono" id="m-id"></dd>
+          <dt>导览牌编号</dt>
+          <dd class="mono" id="m-qr"></dd>
+          <dt>认定与类别</dt>
+          <dd id="m-heritage"></dd>
+          <dt>所在</dt>
+          <dd id="m-site"></dd>
+        </dl>
+        <div>
+          <figure class="locator">
+            <svg id="locator" role="img" aria-label="点位示意图"></svg>
+            <figcaption>濠江区点位示意，按实测经纬度落点。</figcaption>
+          </figure>
+          <div class="side-links">
+            <a id="m-mobile" href="mobile.html">导览牌扫码页 →</a>
+            <a id="m-graph" href="graph.html">在知识图谱中查看 →</a>
+          </div>
+        </div>
+      </aside>
     </div>
-  </header>
 
-  <main class="workbench">
-    <!-- Left Rail: Search, Map & Catalog -->
-    <section class="surface-card panel-pad">
-      <div class="card-header" style="margin-bottom:0;padding-bottom:10px;">
-        <div>
-          <span class="eyebrow">Spatial Directory</span>
-          <h2 class="card-title">濠江四街五点空间目录</h2>
-        </div>
-        <span class="card-meta-pill tnum" id="list-count">18 / 18</span>
+    <footer class="colophon">
+      <div class="colophon-inner">
+        <span>汕头大学“潮音博物”课题组　·　濠江方言风物录　首期</span>
+        <span class="links">
+          <a href="about.html">关于本项目</a>
+          <a href="graph.html">知识图谱</a>
+          <a href="experiment.html">对照实验施测页</a>
+          <a href="schema/chaoyin_nominal_schema_v1.json">数据规范</a>
+        </span>
       </div>
-
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.5" y2="16.5"/></svg>
-        <input id="dir-search" class="search-field" type="text" placeholder="检索正字、俗称、潮拼或村落…" />
-        <button id="dir-clear" class="search-clear" title="清空">×</button>
-      </div>
-
-      <div class="map-card">
-        <svg id="haojiang-map" viewBox="0 0 320 154" width="100%" height="148" aria-label="汕头市濠江区四街五点交互空间图">
-          <defs>
-            <pattern id="seaGrid" width="16" height="16" patternUnits="userSpaceOnUse">
-              <path d="M 16 0 L 0 0 0 16" fill="none" stroke="rgba(15,82,90,0.06)" stroke-width="0.8"/>
-            </pattern>
-            <linearGradient id="landGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FCF9F2"/>
-              <stop offset="100%" stop-color="#F1EAD9"/>
-            </linearGradient>
-          </defs>
-          <rect x="0" y="0" width="320" height="154" rx="8" fill="#E3EFF2" />
-          <rect x="0" y="0" width="320" height="154" rx="8" fill="url(#seaGrid)" />
-
-          <!-- Subtle coastal ripple rings -->
-          <path d="M18,24 Q102,8 192,28 Q272,44 298,100 Q276,144 196,144 Q106,138 40,112 Q8,76 18,24 Z" fill="none" stroke="rgba(15,82,90,0.12)" stroke-width="1" stroke-dasharray="3,3"/>
-          <!-- Main Haojiang Peninsula -->
-          <path d="M26,28 Q102,15 186,33 Q260,48 286,98 Q266,136 192,136 Q110,132 48,106 Q18,74 26,28 Z"
-                fill="url(#landGrad)" stroke="#88A5AD" stroke-width="1.4" />
-
-          <!-- Inner Waterway / Reach line -->
-          <path d="M90,46 L176,80 L232,112" fill="none" stroke="rgba(15,82,90,0.18)" stroke-width="1" stroke-dasharray="2,3"/>
-
-          <!-- Waterbody Labels -->
-          <text x="12" y="16" font-size="9" fill="#3D6773" font-weight="600">汕头内海湾（礐石海）</text>
-          <text x="234" y="16" font-size="9" fill="#3D6773" font-weight="600">南海 / 广澳湾</text>
-
-          <!-- 5 Anchor Nodes carefully spaced -->
-          <g class="map-node" data-village="红光村">
-            <circle class="pin-halo" cx="84" cy="42" r="12" fill="rgba(15,82,90,0.18)"/>
-            <circle class="pin-core" cx="84" cy="42" r="5.8" fill="#0F525A" stroke="#FFFFFF" stroke-width="1.8"/>
-            <text x="95" y="45" font-size="10" fill="#182228" font-weight="700">礐石 · 红光村</text>
-          </g>
-          <g class="map-node" data-village="蜈田村">
-            <circle class="pin-halo" cx="56" cy="70" r="12" fill="rgba(168,78,20,0.18)"/>
-            <circle class="pin-core" cx="56" cy="70" r="5.8" fill="#A84E14" stroke="#FFFFFF" stroke-width="1.8"/>
-            <text x="67" y="73" font-size="10" fill="#182228" font-weight="700">礐石 · 蜈田村</text>
-          </g>
-          <g class="map-node" data-village="凤岗古村">
-            <circle class="pin-halo" cx="102" cy="103" r="12" fill="rgba(168,78,20,0.18)"/>
-            <circle class="pin-core" cx="102" cy="103" r="5.8" fill="#A84E14" stroke="#FFFFFF" stroke-width="1.8"/>
-            <text x="113" y="106" font-size="10" fill="#182228" font-weight="700">马滘 · 凤岗古村</text>
-          </g>
-          <g class="map-node" data-village="达濠古城">
-            <circle class="pin-halo" cx="170" cy="74" r="12" fill="rgba(179,38,30,0.18)"/>
-            <circle class="pin-core" cx="170" cy="74" r="6.2" fill="#B3261E" stroke="#FFFFFF" stroke-width="1.8"/>
-            <text x="180" y="77" font-size="10" fill="#92221B" font-weight="700">达濠古城 / 渔港</text>
-          </g>
-          <g class="map-node" data-village="东湖社区">
-            <circle class="pin-halo" cx="234" cy="112" r="12" fill="rgba(70,59,140,0.18)"/>
-            <circle class="pin-core" cx="234" cy="112" r="5.8" fill="#463B8C" stroke="#FFFFFF" stroke-width="1.8"/>
-            <text x="223" y="128" font-size="10" fill="#372E70" font-weight="700" text-anchor="middle">广澳 · 东湖侨村</text>
-          </g>
-        </svg>
-        <div class="village-filter-bar" id="village-bar">
-          <span id="village-bar-txt">已筛选地点：达濠古城</span>
-          <button class="reset-vil-btn" id="btn-clear-vil">显示全区</button>
-        </div>
-      </div>
-
-      <div class="cat-segmented" role="tablist">
-        <button class="cat-btn active" data-cat="ALL">全部 <span class="tnum">(18)</span></button>
-        <button class="cat-btn" data-cat="农渔饮食风物">饮食 <span class="tnum">(6)</span></button>
-        <button class="cat-btn" data-cat="非遗百工器物">百工 <span class="tnum">(6)</span></button>
-        <button class="cat-btn" data-cat="侨乡俗谚歌谣">俗谚 <span class="tnum">(6)</span></button>
-      </div>
-
-      <div class="item-list" id="item-list"></div>
-    </section>
-
-    <!-- Center Stage: Multimodal Specimen & Acoustic Pitch Contour -->
-    <section style="display:flex;flex-direction:column;gap:14px;min-width:0;">
-      <article class="specimen-hero">
-        <div class="specimen-top-meta">
-          <div class="id-cluster">
-            <span class="mono-badge" id="sp-id">CY-AF-001</span>
-            <span class="qr-badge" id="sp-qr">导览牌 QR-HJ-001</span>
-            <span class="badge-pill badge-af" id="sp-cat-badge">农渔饮食风物</span>
-          </div>
-          <a class="quick-link-btn" id="sp-mobile-btn" href="mobile.html?id=CY-AF-001">
-            手机扫码视角 ↗
-          </a>
-        </div>
-
-        <h2 class="specimen-word" id="sp-word">达濠鱼丸</h2>
-        <div class="specimen-sub-row">
-          <span class="specimen-alias" id="sp-alias">民间俗称 / 辨正：拍鱼丸 / 那哥鱼丸</span>
-          <span class="heritage-pill" id="sp-heritage">广东省省级非遗（2018）· 国家地理标志产品</span>
-        </div>
-
-        <div class="geo-strip">
-          <div class="geo-left">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0F525A" stroke-width="2"><path d="M12 21s-6-5.3-6-10.5A6 6 0 1 1 18 10.5C18 15.7 12 21 12 21Z"/><circle cx="12" cy="10.5" r="2.2"/></svg>
-            <span id="sp-site">达濠街道 · 达濠古城及渔港片区</span>
-          </div>
-          <span class="geo-coords tnum" id="sp-coords">23.2815°N, 116.7182°E</span>
-        </div>
-
-        <div class="phonetic-grid">
-          <div class="phon-card">
-            <div style="min-width:0;">
-              <div class="phon-k">1960《潮州话拼音方案》8声调转写</div>
-              <div class="phon-v" id="sp-pengim">dah⁸-hô⁵ hî⁵-uân⁵</div>
-            </div>
-            <button class="copy-icon-btn" data-copy="sp-pengim" title="复制潮拼">复制</button>
-          </div>
-          <div class="phon-card">
-            <div style="min-width:0;">
-              <div class="phon-k">国际音标 IPA 宽式记音</div>
-              <div class="phon-v" id="sp-ipa">[taʔ˥-hɔ˥ hi˥-uaŋ˥]</div>
-            </div>
-            <button class="copy-icon-btn" data-copy="sp-ipa" title="复制国际音标">复制</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="surface-card acoustic-panel">
-        <div class="acoustic-head">
-          <div>
-            <span class="eyebrow">Acoustic Pitch Contour</span>
-            <h3 class="card-title">声调基频（F₀五度值）双腔曲线对照</h3>
-          </div>
-          <div class="play-group">
-            <button class="btn-play-primary" id="btn-play">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
-              <span id="play-hj-txt">试听濠江腔</span>
-            </button>
-            <button class="btn-play-secondary" id="btn-play-st">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"/></svg>
-              <span>市区腔对照</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="chart-shell">
-          <div class="chart-tooltip" id="f0-tooltip"></div>
-          <svg id="f0-svg" viewBox="0 0 560 182" width="100%" height="182"></svg>
-          <div class="chart-legend">
-            <div class="legend-items">
-              <span class="leg-dot" style="color:#C05F1D;"><span style="width:16px;height:3px;border-radius:2px;background:#C05F1D;display:inline-block;"></span>濠江（达濠）海岛实录腔</span>
-              <span class="leg-dot" style="color:#0F525A;"><span style="width:16px;border-top:2.5px dashed #0F525A;display:inline-block;"></span>汕头市区参照腔（校内母语者配录）</span>
-            </div>
-            <span style="font-size:11px;color:var(--ink-muted);">悬停曲线节点查看五度音高数值</span>
-          </div>
-        </div>
-      </article>
-
-      <div class="notes-grid">
-        <article class="surface-card note-card">
-          <div class="note-head">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.5c-2.5-2-6-2-8.5-.5v13c2.5-1.5 6-1.5 8.5.5 2.5-2 6-2 8.5-.5V6c-2.5-1.5-6-1.5-8.5.5Z"/><line x1="12" y1="6.5" x2="12" y2="19.5"/></svg>
-            <span>濠江海岛音韵与本字考释</span>
-          </div>
-          <p class="note-body" id="sp-accent"></p>
-        </article>
-        <article class="surface-card note-card">
-          <div class="note-head">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-            <span>器物形制、非遗工序与村落现场</span>
-          </div>
-          <p class="note-body" id="sp-desc"></p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Right Rail: Controlled RAG Guardrail Verifier -->
-    <section class="surface-card panel-pad rail-right">
-      <div class="card-header" style="margin-bottom:0;padding-bottom:10px;">
-        <div>
-          <span class="eyebrow">Graph-Grounded QA</span>
-          <h2 class="card-title">受控图谱防幻觉核验台</h2>
-        </div>
-        <span class="card-meta-pill">双模型实测</span>
-      </div>
-
-      <div class="bench-strip tnum" id="bench-strip">
-        <div class="bench-cell"><span class="b-val">8.3%→100%</span><span class="b-lbl">潮拼转写准确率</span></div>
-        <div class="bench-cell"><span class="b-val">69.0%→3.6%</span><span class="b-lbl">双模型差错率</span></div>
-        <div class="bench-cell"><span class="b-val">100.0%</span><span class="b-lbl">未收录词拒答率</span></div>
-      </div>
-
-      <div class="guardrail-tester">
-        <div style="font-size:11.5px;font-weight:700;color:var(--celadon-900);">即问即查与未收录词拒答实测</div>
-        <div class="qa-input-row">
-          <input id="qa-input" class="qa-input" type="text" placeholder="输入潮汕名物词或虚构词测试拒答…" />
-          <button id="qa-btn" class="qa-btn">核验</button>
-        </div>
-        <div class="qa-chips">
-          <button class="qa-chip" data-q="鱼饭">试测：鱼饭</button>
-          <button class="qa-chip" data-q="力落">试测：力落</button>
-          <button class="qa-chip" data-q="胶己人">试测：胶己人</button>
-          <button class="qa-chip placebo" data-q="青石双耳滤卤漏斗">未收录拒答测试</button>
-        </div>
-        <div class="qa-live-result" id="qa-live-res"></div>
-      </div>
-
-      <div class="prompt-bubble">
-        <span class="p-lbl">当前标本访客扫码提问</span>
-        <span id="rag-q"></span>
-      </div>
-
-      <div class="diff-card bad">
-        <div class="diff-badge">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          通用大模型零样本常见误读（未接入图谱）
-        </div>
-        <p id="rag-bad"></p>
-      </div>
-
-      <div class="diff-card good">
-        <div class="diff-badge">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 15.5 9.5"/></svg>
-          潮音博物受控检索核验输出
-        </div>
-        <p id="rag-good"></p>
-      </div>
-
-      <div class="provenance-card">
-        <div class="prov-head">
-          <span>音—物—地结构化溯源核对</span>
-          <a class="prov-link" id="graph-deep-link" href="graph.html?focus=CY-AF-001">图谱定位 ↗</a>
-        </div>
-        <div class="prov-rows" id="triple-view"></div>
-      </div>
-    </section>
-  </main>
-
-  <div class="toast" id="toast">已复制到剪贴板</div>
+    </footer>
+  </div>
 
   <script src="./seed_data.js"></script>
+  <script src="./app.js"></script>
   <script>
     (function () {
-      const data = window.CHAOYIN_DATA || { seedItems: [] };
-      const items = data.seedItems || [];
+      var CY = window.CY, items = CY.items;
       if (!items.length) return;
+      var $ = function (id) { return document.getElementById(id); };
+      var params = new URLSearchParams(location.search);
+      var cur = items.find(function (x) { return x.id === params.get("id"); }) || items[0];
+      var mode = "cat", query = "";
 
-      const params = new URLSearchParams(window.location.search);
-      const queryId = params.get("id");
+      $("idx-sum-count").textContent = "共" + items.length + "条";
 
-      let currentCat = "ALL";
-      let currentVillage = null;
-      let searchKw = "";
-      let selectedItem = items.find((x) => x.id === queryId) || items[0];
-      let animFrame = null;
-
-      document.getElementById("kpi-seed").textContent = items.length;
-      const bench = data.verifiedFacts && data.verifiedFacts.pilot_rag_benchmark;
-      if (bench) {
-        document.getElementById("kpi-halluc").textContent = bench.pooled_rag_halluc_pct.toFixed(1) + "%";
-        document.getElementById("bench-strip").innerHTML = `
-          <div class="bench-cell"><span class="b-val">${bench.pooled_zero_shot_pengim_acc_pct.toFixed(1)}%→${bench.pooled_rag_pengim_acc_pct.toFixed(0)}%</span><span class="b-lbl">潮拼转写准确率</span></div>
-          <div class="bench-cell"><span class="b-val">${bench.pooled_zero_shot_halluc_pct.toFixed(1)}%→${bench.pooled_rag_halluc_pct.toFixed(1)}%</span><span class="b-lbl">${bench.total_api_evaluations}次实测差错率</span></div>
-          <div class="bench-cell"><span class="b-val">${bench.pooled_rag_placebo_abstain_pct.toFixed(1)}%</span><span class="b-lbl">未收录词拒答率</span></div>
-        `;
-      }
-
-      const toastEl = document.getElementById("toast");
-      let toastTimer = null;
-      function showToast(msg) {
-        toastEl.textContent = msg;
-        toastEl.classList.add("show");
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 1800);
-      }
-
-      function badgeClass(cat) {
-        if (cat.includes("农渔")) return "badge-pill badge-af";
-        if (cat.includes("百工")) return "badge-pill badge-cr";
-        return "badge-pill badge-pr";
-      }
-
-      function catShort(cat) {
-        if (cat.includes("农渔")) return "农渔饮食";
-        if (cat.includes("百工")) return "非遗百工";
-        return "侨乡俗谚";
-      }
-
-      function renderList() {
-        const listEl = document.getElementById("item-list");
-        listEl.innerHTML = "";
-        const kw = searchKw.toLowerCase();
-        const filtered = items.filter((it) => {
-          const catOk = currentCat === "ALL" || it.category === currentCat;
-          const vilOk = !currentVillage || it.site_village.includes(currentVillage);
-          const kwOk = !kw ||
-            it.orthography.toLowerCase().includes(kw) ||
-            it.folk_alias.toLowerCase().includes(kw) ||
-            it.pengim_shantou.toLowerCase().includes(kw) ||
-            it.site_village.toLowerCase().includes(kw) ||
-            it.site_street.toLowerCase().includes(kw);
-          return catOk && vilOk && kwOk;
+      function groups() {
+        if (mode === "cat") {
+          return CY.CAT_ORDER.map(function (c) {
+            return { title: CY.catShort(c), list: items.filter(function (i) { return i.category === c; }) };
+          });
+        }
+        return CY.SITES.map(function (s) {
+          return { title: s.street + "　" + s.name, list: items.filter(function (i) { return CY.siteOf(i) === s; }) };
         });
+      }
 
-        document.getElementById("list-count").textContent = `${filtered.length} / ${items.length}`;
+      function hit(it, q) {
+        q = q.toLowerCase();
+        return [it.orthography, it.folk_alias, it.pengim_shantou, it.site_village, it.site_street]
+          .some(function (f) { return f.toLowerCase().indexOf(q) !== -1; });
+      }
 
-        if (!filtered.length) {
-          listEl.innerHTML = `<div style="padding:20px 10px;text-align:center;font-size:12px;color:var(--ink-muted);">当前筛选条件暂无匹配风物条目</div>`;
-          return;
+      function renderIndex() {
+        var q = query.trim(), n = 0, html = "";
+        groups().forEach(function (g) {
+          var list = q ? g.list.filter(function (i) { return hit(i, q); }) : g.list;
+          if (!list.length) return;
+          n += list.length;
+          html += '<section class="idx-group"><h3>' + g.title + "</h3>" + list.map(function (i) {
+            return '<a class="idx-item' + (i === cur ? " on" : "") + '" href="?id=' + i.id + '" data-id="' + i.id + '">' +
+              '<span class="w">' + CY.shortName(i.orthography) + '</span><span class="lead"></span>' +
+              '<span class="n">' + (items.indexOf(i) + 1) + "</span></a>";
+          }).join("") + "</section>";
+        });
+        $("idx-list").innerHTML = html;
+
+        var msg = $("lookup-msg");
+        if (!q) { msg.textContent = ""; msg.className = "lookup-msg"; }
+        else if (n) { msg.textContent = "找到" + n + "条。"; msg.className = "lookup-msg"; }
+        else {
+          msg.textContent = "本录尚未收录“" + q + "”。现收的" + items.length + "条均经课题组核对，未经核实的词语不作解释。";
+          msg.className = "lookup-msg miss";
         }
 
-        filtered.forEach((it) => {
-          const row = document.createElement("div");
-          row.className = "item-row" + (selectedItem && selectedItem.id === it.id ? " active" : "");
-          const villageShort = it.site_village.split("（")[0];
-          row.innerHTML = `
-            <div class="item-row-top">
-              <span class="item-row-title">${it.orthography}</span>
-              <span class="${badgeClass(it.category)}">${catShort(it.category)}</span>
-            </div>
-            <div class="item-row-meta">
-              <span class="item-row-pengim">${it.pengim_shantou}</span>
-              <span class="item-row-site">${it.site_street} · ${villageShort}</span>
-            </div>
-          `;
-          row.addEventListener("click", () => selectSpecimen(it));
-          listEl.appendChild(row);
-        });
-      }
-
-      // Smooth Catmull-Rom to SVG Cubic Bezier helper
-      function buildSmoothPath(pts) {
-        if (pts.length < 2) return "";
-        if (pts.length === 2) return `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)} L${pts[1].x.toFixed(1)},${pts[1].y.toFixed(1)}`;
-        let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
-        for (let i = 0; i < pts.length - 1; i++) {
-          const p0 = pts[i === 0 ? i : i - 1];
-          const p1 = pts[i];
-          const p2 = pts[i + 1];
-          const p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
-          const cp1x = p1.x + (p2.x - p0.x) / 6;
-          const cp1y = p1.y + (p2.y - p0.y) / 6;
-          const cp2x = p2.x - (p3.x - p1.x) / 6;
-          const cp2y = p2.y - (p3.y - p1.y) / 6;
-          d += ` C${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
-        }
-        return d;
-      }
-
-      let currentPlotMeta = null;
-
-      function renderF0Chart(it) {
-        const svg = document.getElementById("f0-svg");
-        const hj = it.f0_contour_haojiang;
-        const st = it.f0_contour_shantou;
-        const w = 560, h = 182, padL = 54, padR = 20, padT = 16, padB = 24;
-        const plotW = w - padL - padR;
-        const plotH = h - padT - padB;
-
-        const yMap = (val) => padT + plotH - ((val - 15) / 45) * plotH;
-        const xMap = (idx, n) => padL + (idx / Math.max(1, n - 1)) * plotW;
-
-        const bands = [
-          { y0: 50, y1: 60, fill: "rgba(15,82,90,0.035)" },
-          { y0: 30, y1: 40, fill: "rgba(15,82,90,0.035)" },
-        ];
-        let bandHtml = bands.map(b => {
-          const topY = yMap(b.y1);
-          const botY = yMap(b.y0);
-          return `<rect x="${padL}" y="${topY.toFixed(1)}" width="${plotW}" height="${(botY - topY).toFixed(1)}" fill="${b.fill}"/>`;
-        }).join("");
-
-        const levels = [
-          { v: 55, lbl: "高 [55]" },
-          { v: 45, lbl: "半高 [4]" },
-          { v: 35, lbl: "中 [33]" },
-          { v: 25, lbl: "半低 [2]" },
-          { v: 18, lbl: "低 [11]" }
-        ];
-        let gridHtml = "";
-        levels.forEach((lv) => {
-          const y = yMap(lv.v);
-          gridHtml += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}" stroke="rgba(24,34,40,0.09)" stroke-dasharray="3,3"/>`;
-          gridHtml += `<text x="${padL - 8}" y="${(y + 3.5).toFixed(1)}" text-anchor="end" font-size="10" fill="#707F8A" font-family="JetBrains Mono, Consolas, sans-serif">${lv.lbl}</text>`;
-        });
-
-        const hjPts = hj.map((v, i) => ({ x: xMap(i, hj.length), y: yMap(v), v }));
-        const stPts = st.map((v, i) => ({ x: xMap(i, st.length), y: yMap(v), v }));
-
-        const hjPath = buildSmoothPath(hjPts);
-        const stPath = buildSmoothPath(stPts);
-        const areaPath = `${hjPath} L${hjPts[hjPts.length - 1].x.toFixed(1)},${(padT + plotH).toFixed(1)} L${hjPts[0].x.toFixed(1)},${(padT + plotH).toFixed(1)} Z`;
-
-        const timeTicks = hjPts.map((pt, i) => `
-          <text x="${pt.x.toFixed(1)}" y="${h - 6}" text-anchor="middle" font-size="9.5" fill="#8A96A0" font-family="JetBrains Mono, Consolas, sans-serif">t${i + 1}</text>
-        `).join("");
-
-        const stDots = stPts.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.1" fill="#ffffff" stroke="#0F525A" stroke-width="1.8"/>`).join("");
-        const hjDots = hjPts.map(p => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#C05F1D" stroke="#ffffff" stroke-width="1.6"/>`).join("");
-
-        svg.innerHTML = `
-          <defs>
-            <linearGradient id="hjFillGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#C05F1D" stop-opacity="0.22"/>
-              <stop offset="100%" stop-color="#C05F1D" stop-opacity="0.01"/>
-            </linearGradient>
-          </defs>
-          ${bandHtml}
-          ${gridHtml}
-          ${timeTicks}
-          <path d="${areaPath}" fill="url(#hjFillGrad)"/>
-          <path d="${stPath}" fill="none" stroke="#0F525A" stroke-width="2.1" stroke-dasharray="5,3" opacity="0.88"/>
-          <path d="${hjPath}" fill="none" stroke="#C05F1D" stroke-width="2.8" stroke-linecap="round"/>
-          ${stDots}
-          ${hjDots}
-          <line id="f0-hover-line" x1="0" y1="${padT}" x2="0" y2="${padT + plotH}" stroke="rgba(24,34,40,0.22)" stroke-width="1" visibility="hidden"/>
-          <line id="f0-playhead" x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="#0F525A" stroke-width="2" visibility="hidden"/>
-        `;
-
-        currentPlotMeta = { w, h, padL, plotW, hjPts, stPts };
-      }
-
-      // Interactive hover tooltip on F0 SVG
-      const f0Svg = document.getElementById("f0-svg");
-      const tooltipEl = document.getElementById("f0-tooltip");
-      f0Svg.addEventListener("mousemove", (e) => {
-        if (!currentPlotMeta) return;
-        const rect = f0Svg.getBoundingClientRect();
-        const svgX = ((e.clientX - rect.left) / rect.width) * currentPlotMeta.w;
-        let bestIdx = 0;
-        let bestDist = Infinity;
-        currentPlotMeta.hjPts.forEach((pt, idx) => {
-          const d = Math.abs(pt.x - svgX);
-          if (d < bestDist) { bestDist = d; bestIdx = idx; }
-        });
-        const hp = currentPlotMeta.hjPts[bestIdx];
-        const sp = currentPlotMeta.stPts[bestIdx];
-        const hLine = document.getElementById("f0-hover-line");
-        if (hLine) {
-          hLine.setAttribute("x1", hp.x.toFixed(1));
-          hLine.setAttribute("x2", hp.x.toFixed(1));
-          hLine.setAttribute("visibility", "visible");
-        }
-        const toFive = (v) => (1 + ((v - 18) / 37) * 4).toFixed(1);
-        tooltipEl.textContent = `帧 t${bestIdx + 1} · 濠江腔 ${toFive(hp.v)}度（${hp.v}） ｜ 市区腔 ${toFive(sp.v)}度（${sp.v}）`;
-        tooltipEl.classList.add("show");
-      });
-      f0Svg.addEventListener("mouseleave", () => {
-        tooltipEl.classList.remove("show");
-        const hLine = document.getElementById("f0-hover-line");
-        if (hLine) hLine.setAttribute("visibility", "hidden");
-      });
-
-      function renderDetail(it) {
-        document.getElementById("sp-id").textContent = it.id;
-        document.getElementById("sp-qr").textContent = `导览牌 QR-HJ-${it.id.slice(-3)}`;
-        const catBadge = document.getElementById("sp-cat-badge");
-        catBadge.textContent = it.category;
-        catBadge.className = badgeClass(it.category);
-
-        document.getElementById("sp-mobile-btn").href = `mobile.html?id=${it.id}`;
-        document.getElementById("nav-mobile-link").href = `mobile.html?id=${it.id}`;
-        document.getElementById("graph-deep-link").href = `graph.html?focus=${it.id}`;
-
-        document.getElementById("sp-word").textContent = it.orthography;
-        document.getElementById("sp-alias").textContent = `民间俗称 / 辨正：${it.folk_alias}`;
-        document.getElementById("sp-heritage").textContent = it.heritage_tag;
-        document.getElementById("sp-site").textContent = `${it.site_street} · ${it.site_village}`;
-        document.getElementById("sp-coords").textContent = `${it.lat.toFixed(4)}°N, ${it.lng.toFixed(4)}°E`;
-        document.getElementById("sp-pengim").textContent = it.pengim_shantou;
-        document.getElementById("sp-ipa").textContent = it.ipa_shantou;
-        document.getElementById("sp-accent").textContent = it.haojiang_accent_note;
-        document.getElementById("sp-desc").textContent = it.artifact_desc;
-
-        document.getElementById("rag-q").textContent =
-          `“在濠江区${it.site_village.split("（")[0]}导览牌看到‘${it.orthography}’，潮汕话正字与读音是什么？有哪些风物讲究？”`;
-        document.getElementById("rag-bad").textContent = it.llm_hallucination_trap;
-        document.getElementById("rag-good").textContent =
-          `受控图谱命中（${it.id}）：规范正字写作“${it.orthography}”，1960 潮拼记作 ${it.pengim_shantou}（国际音标 ${it.ipa_shantou}）。${it.artifact_desc} 实地锚定于汕头市濠江区${it.site_street}${it.site_village}。`;
-
-        document.getElementById("triple-view").innerHTML = `
-          <div class="prov-row"><span class="prov-k">正字与读音</span><span class="prov-v mono">${it.orthography} → ${it.pengim_shantou}</span></div>
-          <div class="prov-row"><span class="prov-k">宽式音标</span><span class="prov-v mono">${it.ipa_shantou}</span></div>
-          <div class="prov-row"><span class="prov-k">所属门类</span><span class="prov-v">${it.category}</span></div>
-          <div class="prov-row"><span class="prov-k">村落点位</span><span class="prov-v">濠江区 · ${it.site_street} · ${it.site_village.split("（")[0]}</span></div>
-          <div class="prov-row"><span class="prov-k">核验状态</span><span class="prov-v" style="color:var(--ok-700);">双盲正字审校通过 · 拒答防护就绪</span></div>
-        `;
-
-        // Sync map halo if village matches
-        document.querySelectorAll(".map-node").forEach((node) => {
-          node.classList.toggle("selected", it.site_village.includes(node.dataset.village));
-        });
-
-        renderF0Chart(it);
-      }
-
-      function selectSpecimen(it) {
-        selectedItem = it;
-        const url = new URL(window.location.href);
-        url.searchParams.set("id", it.id);
-        window.history.replaceState({}, "", url.toString());
-        renderList();
-        renderDetail(it);
-      }
-
-      // Warm harmonic contour synth + animated SVG playhead
-      function playF0Contour(seq, baseHz, isHaojiang) {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if (!AudioCtx) {
-          showToast("当前浏览器不支持 Web Audio 试听");
-          return;
-        }
-        const ctx = new AudioCtx();
-        const now = ctx.currentTime;
-        const totalDur = Math.max(0.75, seq.length * 0.13);
-
-        const filter = ctx.createBiquadFilter();
-        filter.type = "lowpass";
-        filter.frequency.setValueAtTime(1400, now);
-
-        const osc1 = ctx.createOscillator();
-        const osc2 = ctx.createOscillator();
-        const gain1 = ctx.createGain();
-        const gain2 = ctx.createGain();
-        const master = ctx.createGain();
-
-        osc1.type = "triangle";
-        osc2.type = "sine";
-
-        seq.forEach((v, i) => {
-          const t = now + (i / Math.max(1, seq.length - 1)) * totalDur;
-          const hz = baseHz * Math.pow(2, (v - 34) / 22);
-          if (i === 0) {
-            osc1.frequency.setValueAtTime(hz, t);
-            osc2.frequency.setValueAtTime(hz * 2, t);
-          } else {
-            osc1.frequency.linearRampToValueAtTime(hz, t);
-            osc2.frequency.linearRampToValueAtTime(hz * 2, t);
-          }
-        });
-
-        gain1.gain.value = 0.85;
-        gain2.gain.value = 0.16;
-        master.gain.setValueAtTime(0.001, now);
-        master.gain.linearRampToValueAtTime(0.20, now + 0.05);
-        master.gain.setValueAtTime(0.18, now + totalDur - 0.08);
-        master.gain.exponentialRampToValueAtTime(0.001, now + totalDur + 0.04);
-
-        osc1.connect(gain1);
-        osc2.connect(gain2);
-        gain1.connect(filter);
-        gain2.connect(filter);
-        filter.connect(master);
-        master.connect(ctx.destination);
-
-        osc1.start(now);
-        osc2.start(now);
-        osc1.stop(now + totalDur + 0.06);
-        osc2.stop(now + totalDur + 0.06);
-
-        // Animate SVG playhead
-        cancelAnimationFrame(animFrame);
-        const startPerf = performance.now();
-        const playhead = document.getElementById("f0-playhead");
-        if (playhead && currentPlotMeta) {
-          playhead.setAttribute("stroke", isHaojiang ? "#C05F1D" : "#0F525A");
-          playhead.setAttribute("visibility", "visible");
-          const step = (ts) => {
-            const p = Math.min(1, (ts - startPerf) / (totalDur * 1000));
-            const x = currentPlotMeta.padL + p * currentPlotMeta.plotW;
-            playhead.setAttribute("x1", x.toFixed(1));
-            playhead.setAttribute("x2", x.toFixed(1));
-            if (p < 1) {
-              animFrame = requestAnimationFrame(step);
-            } else {
-              playhead.setAttribute("visibility", "hidden");
+        Array.prototype.forEach.call($("idx-list").querySelectorAll(".idx-item"), function (a) {
+          a.addEventListener("click", function (e) {
+            e.preventDefault();
+            select(items.find(function (x) { return x.id === a.dataset.id; }));
+            if (window.innerWidth <= 760) {
+              $("idx-details").open = false;
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }
-          };
-          animFrame = requestAnimationFrame(step);
-        }
+          });
+        });
       }
 
-      document.getElementById("btn-play").addEventListener("click", () => {
-        if (selectedItem) playF0Contour(selectedItem.f0_contour_haojiang, 178, true);
-      });
-      document.getElementById("btn-play-st").addEventListener("click", () => {
-        if (selectedItem) playF0Contour(selectedItem.f0_contour_shantou, 192, false);
-      });
-
-      // Category Filter Tabs
-      document.querySelectorAll(".cat-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          currentCat = btn.dataset.cat;
-          document.querySelectorAll(".cat-btn").forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-          const match = items.find((x) =>
-            (currentCat === "ALL" || x.category === currentCat) &&
-            (!currentVillage || x.site_village.includes(currentVillage))
-          );
-          if (match) selectedItem = match;
-          renderList();
-          renderDetail(selectedItem);
-        });
-      });
-
-      // Spatial Map Node Filter
-      document.querySelectorAll(".map-node").forEach((node) => {
-        node.addEventListener("click", () => {
-          const v = node.dataset.village;
-          currentVillage = currentVillage === v ? null : v;
-          const bar = document.getElementById("village-bar");
-          if (currentVillage) {
-            document.getElementById("village-bar-txt").textContent = `已锁定点位：${currentVillage}`;
-            bar.classList.add("show");
-            currentCat = "ALL";
-            document.querySelectorAll(".cat-btn").forEach((b) => b.classList.toggle("active", b.dataset.cat === "ALL"));
-            const match = items.find((x) => x.site_village.includes(currentVillage));
-            if (match) selectSpecimen(match);
-            else renderList();
-          } else {
-            bar.classList.remove("show");
-            renderList();
-          }
-        });
-      });
-
-      document.getElementById("btn-clear-vil").addEventListener("click", () => {
-        currentVillage = null;
-        document.getElementById("village-bar").classList.remove("show");
-        renderList();
-      });
-
-      // Directory live search
-      const dirSearch = document.getElementById("dir-search");
-      const dirClear = document.getElementById("dir-clear");
-      dirSearch.addEventListener("input", (e) => {
-        searchKw = e.target.value.trim();
-        dirClear.style.display = searchKw ? "block" : "none";
-        renderList();
-      });
-      dirClear.addEventListener("click", () => {
-        dirSearch.value = "";
-        searchKw = "";
-        dirClear.style.display = "none";
-        renderList();
-      });
-
-      // Copy buttons
-      document.querySelectorAll(".copy-icon-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const target = document.getElementById(btn.dataset.copy);
-          if (!target) return;
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(target.textContent).then(() => showToast("已复制：" + target.textContent));
-          } else {
-            showToast(target.textContent);
-          }
-        });
-      });
-
-      // Right-column live controlled Guardrail Tester
-      function runGuardrailCheck(rawQuery) {
-        const q = rawQuery.trim();
-        const box = document.getElementById("qa-live-res");
-        if (!q) {
-          box.className = "qa-live-result";
-          return;
-        }
-        const safeQ = q.replace(/[<>&"]/g, "");
-        const hit = items.find((it) =>
-          it.orthography.includes(q) ||
-          q.includes(it.orthography.split("（")[0].split("：")[0]) ||
-          it.folk_alias.includes(q) ||
-          it.artifact_desc.includes(q)
-        );
-        if (hit) {
-          selectSpecimen(hit);
-          box.className = "qa-live-result show hit";
-          box.innerHTML = `<strong>✓ 命中审校档案 ${hit.id}（${hit.orthography}）</strong><br/>1960 潮拼：<code class="mono">${hit.pengim_shantou}</code> ｜ 国际音标：<code class="mono">${hit.ipa_shantou}</code><br/>已联动切换中栏声学详情与双模型防误读对照。`;
-        } else {
-          box.className = "qa-live-result show abstain";
-          box.innerHTML = `<strong>⚠ 触发受控拒答机制（暂未收录）</strong><br/>经双层词表与知识图谱比对，当前濠江先导库未收录“${safeQ}”的双盲考证记录。为防止凭空杜撰读音与民俗掌故，系统已拦截生成并如实提示暂未收录。`;
-        }
+      function setPager(a, it) {
+        if (!it) { a.style.visibility = "hidden"; return; }
+        a.style.visibility = "visible";
+        a.href = "?id=" + it.id;
+        a.querySelector(".pw").textContent = CY.shortName(it.orthography);
+        a.onclick = function (e) { e.preventDefault(); select(it); window.scrollTo({ top: 0, behavior: "smooth" }); };
       }
 
-      document.getElementById("qa-btn").addEventListener("click", () => runGuardrailCheck(document.getElementById("qa-input").value));
-      document.getElementById("qa-input").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") runGuardrailCheck(e.target.value);
-      });
-      document.querySelectorAll(".qa-chip").forEach((chip) => {
-        chip.addEventListener("click", () => {
-          document.getElementById("qa-input").value = chip.dataset.q;
-          runGuardrailCheck(chip.dataset.q);
+      function renderEntry(it) {
+        var n = items.indexOf(it) + 1;
+        $("e-no").textContent = "第" + CY.cnNum(n) + "条";
+        $("e-cat").textContent = CY.catShort(it.category);
+        $("e-word").textContent = it.orthography;
+        $("e-pengim").textContent = it.pengim_shantou;
+        $("e-ipa").textContent = it.ipa_shantou;
+        $("e-alias").textContent = it.folk_alias;
+        $("e-accent").textContent = it.haojiang_accent_note;
+        $("e-desc").textContent = it.artifact_desc;
+        $("e-trap").textContent = "常见误读　" + it.llm_hallucination_trap;
+        CY.drawTone($("tone"), it);
+
+        $("m-id").textContent = it.id;
+        $("m-qr").textContent = "QR-HJ-" + it.id.slice(-3);
+        $("m-heritage").textContent = it.heritage_tag;
+        $("m-site").innerHTML = CY.esc(it.site_street) + "<br>" + CY.esc(it.site_village) +
+          '<br><span class="mono">' + it.lat.toFixed(4) + "°N　" + it.lng.toFixed(4) + "°E</span>";
+        CY.drawLocator($("locator"), it);
+        $("m-mobile").href = "mobile.html?id=" + it.id;
+        $("m-graph").href = "graph.html?focus=" + it.id;
+
+        setPager($("prev"), items[n - 2]);
+        setPager($("next"), items[n]);
+        document.title = it.orthography + " · 潮音博物";
+      }
+
+      function select(it) {
+        if (!it) return;
+        cur = it;
+        var url = new URL(location.href);
+        url.searchParams.set("id", it.id);
+        history.replaceState({}, "", url.toString());
+        renderIndex();
+        renderEntry(it);
+      }
+
+      $("play-hj").addEventListener("click", function () { CY.playTone($("tone"), cur.f0_contour_haojiang, 170, "#a8321d"); });
+      $("play-st").addEventListener("click", function () { CY.playTone($("tone"), cur.f0_contour_shantou, 180, "#8a857a"); });
+
+      Array.prototype.forEach.call(document.querySelectorAll(".idx-mode button"), function (b) {
+        b.addEventListener("click", function () {
+          mode = b.dataset.mode;
+          Array.prototype.forEach.call(document.querySelectorAll(".idx-mode button"), function (x) {
+            x.classList.toggle("on", x === b);
+          });
+          renderIndex();
         });
       });
 
-      renderList();
-      renderDetail(selectedItem);
+      $("lookup").addEventListener("input", function (e) { query = e.target.value; renderIndex(); });
+      $("lookup").addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        var first = $("idx-list").querySelector(".idx-item");
+        if (first && query.trim()) select(items.find(function (x) { return x.id === first.dataset.id; }));
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.target.tagName === "INPUT") return;
+        var n = items.indexOf(cur);
+        if (e.key === "ArrowRight" && items[n + 1]) select(items[n + 1]);
+        if (e.key === "ArrowLeft" && items[n - 1]) select(items[n - 1]);
+      });
+
+      function syncDetails() { if (window.innerWidth > 760) $("idx-details").open = true; }
+      if (window.innerWidth <= 760) $("idx-details").open = false;
+      window.addEventListener("resize", syncDetails);
+
+      renderIndex();
+      renderEntry(cur);
     })();
   </script>
 </body>
